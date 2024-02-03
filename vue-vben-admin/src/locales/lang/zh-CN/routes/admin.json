@@ -1,0 +1,7 @@
+{
+  "admin": {
+    "moduleName": "系统权限",
+    "account": "账号管理",
+    "role": "角色管理"
+  }
+}

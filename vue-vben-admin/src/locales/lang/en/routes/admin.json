@@ -1,0 +1,7 @@
+{
+  "admin": {
+    "moduleName": "System permission",
+    "account": "Account management",
+    "role": "Role management"
+  }
+}
