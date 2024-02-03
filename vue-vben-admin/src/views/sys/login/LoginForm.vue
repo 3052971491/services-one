@@ -158,7 +158,7 @@
       if (userInfo) {
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
-          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.account}`,
+          description: `${t('sys.login.loginSuccessDesc')}: ${userStore.userInfo.nickname}`,
           duration: 3,
         });
       }
