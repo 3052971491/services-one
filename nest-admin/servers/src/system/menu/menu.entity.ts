@@ -15,8 +15,8 @@ export class MenuEntity {
   @Column({ type: 'varchar', length: 30, comment: '菜单名称' })
   public name: string
 
-  @ApiProperty({ description: '菜单/按钮唯一标识,有前端定义,用于控制菜单按钮显隐' })
-  @Column({ type: 'varchar', length: 50, comment: '菜单/按钮唯一标识，由前端路由name,用于控制菜单按钮显隐' })
+  @ApiProperty({ description: '菜单/按钮唯一标识,由前端定义,用于控制菜单按钮显隐' })
+  @Column({ type: 'varchar', length: 50, comment: '菜单/按钮唯一标识, 由前端路由name,用于控制菜单按钮显隐' })
   public code: string
 
   @ApiProperty({ description: '菜单类型, 1-菜单 2-tabs 3-按钮' })

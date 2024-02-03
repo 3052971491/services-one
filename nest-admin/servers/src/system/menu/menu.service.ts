@@ -34,14 +34,14 @@ export class MenuService {
     }
     const menu = await this.menuManager.transaction(async (transactionalEntityManager) => {
       const menuResult = await transactionalEntityManager.save<MenuEntity>(plainToInstance(MenuEntity, dto))
-      await transactionalEntityManager.save<MenuPermEntity>(
-        plainToInstance(
-          MenuPermEntity,
-          dto.menuPermList.map((perm) => {
-            return { menuId: menuResult.id, ...perm }
-          }),
-        ),
-      )
+      // await transactionalEntityManager.save<MenuPermEntity>(
+      //   plainToInstance(
+      //     MenuPermEntity,
+      //     dto.menuPermList.map((perm) => {
+      //       return { menuId: menuResult.id, ...perm }
+      //     }),
+      //   ),
+      // )
       return menuResult
     })
     if (!menu) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '菜单创建失败，请稍后重试')
