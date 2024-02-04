@@ -63,13 +63,15 @@ async function getAsyncMenus() {
       return show;
     });
   };
-  if (isBackMode()) {
-    return menuFilter(permissionStore.getBackMenuList);
-  }
-  if (isRouteMappingMode()) {
-    return menuFilter(permissionStore.getFrontMenuList);
-  }
-  return staticMenus;
+  // 组合前后端路由
+  return menuFilter([...permissionStore.getBackMenuList]);
+  // if (isBackMode()) {
+  //   return menuFilter(permissionStore.getBackMenuList);
+  // }
+  // if (isRouteMappingMode()) {
+  //   return menuFilter(permissionStore.getFrontMenuList);
+  // }
+  // return staticMenus;
 }
 
 export const getMenus = async (): Promise<Menu[]> => {

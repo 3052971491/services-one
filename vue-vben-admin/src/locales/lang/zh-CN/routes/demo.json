@@ -147,7 +147,6 @@
   "system": {
     "moduleName": "系统管理",
     "account": "账号管理",
-    "vxeTableAccount": "账号管理(VxeTable)",
     "account_detail": "账号详情",
     "password": "修改密码",
     "dept": "部门管理",
@@ -172,7 +171,6 @@
     "editCellTable": "可编辑单元格",
     "editRowTable": "可编辑行",
     "authColumn": "权限列",
-    "resizeParentHeightTable": "继承父元素高度",
-    "vxeTable": "VxeTable"
+    "resizeParentHeightTable": "继承父元素高度"
   }
 }

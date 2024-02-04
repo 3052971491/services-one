@@ -148,7 +148,6 @@
   "system": {
     "moduleName": "System management",
     "account": "Account management",
-    "vxeTableAccount": "Account management(VxeTable)",
     "account_detail": "Account detail",
     "password": "Change password",
     "dept": "Department management",
@@ -173,7 +172,6 @@
     "editCellTable": "Editable cell",
     "editRowTable": "Editable row",
     "authColumn": "Auth column",
-    "resizeParentHeightTable": "resizeParentHeightTable",
-    "vxeTable": "VxeTable"
+    "resizeParentHeightTable": "resizeParentHeightTable"
   }
 }
