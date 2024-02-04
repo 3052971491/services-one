@@ -44,15 +44,15 @@ const admin: AppRouteModule = {
       },
       component: () => import('@/views/admin/role/index.vue'),
     },
-    // {
-    //   path: 'menu',
-    //   name: 'MenuManagement',
-    //   meta: {
-    //     title: t('routes.demo.system.menu'),
-    //     ignoreKeepAlive: true,
-    //   },
-    //   component: () => import('@/views/demo/system/menu/index.vue'),
-    // },
+    {
+      path: 'menu',
+      name: 'MenuManagement',
+      meta: {
+        title: t('routes.admin.admin.menu'),
+        ignoreKeepAlive: true,
+      },
+      component: () => import('@/views/admin/menu/index.vue'),
+    },
     // {
     //   path: 'dept',
     //   name: 'DeptManagement',

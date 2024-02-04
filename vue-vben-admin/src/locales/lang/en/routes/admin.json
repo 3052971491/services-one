@@ -2,6 +2,7 @@
   "admin": {
     "moduleName": "System permission",
     "account": "Account management",
-    "role": "Role management"
+    "role": "Role management",
+    "menu": "Menu management"
   }
 }

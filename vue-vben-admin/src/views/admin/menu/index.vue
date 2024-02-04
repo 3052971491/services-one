@@ -33,22 +33,22 @@
   import { nextTick } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '@/components/Table';
-  import { getMenuList } from '@/api/demo/system';
 
   import { useDrawer } from '@/components/Drawer';
   import MenuDrawer from './MenuDrawer.vue';
 
   import { columns, searchFormSchema } from './menu.data';
+  import { getAllList } from '@/api/admin/menu';
+import { listToTree } from '@/utils/helper/treeHelper';
 
   defineOptions({ name: 'MenuManagement' });
 
   const [registerDrawer, { openDrawer }] = useDrawer();
   const [registerTable, { reload, expandAll }] = useTable({
     title: '菜单列表',
-    api: getMenuList,
+    api: getAllList,
     columns,
     formConfig: {
-      labelWidth: 120,
       schemas: searchFormSchema,
     },
     isTreeTable: true,
@@ -63,9 +63,14 @@
       width: 80,
       title: '操作',
       dataIndex: 'action',
-      // slots: { customRender: 'action' },
-      fixed: undefined,
+      fixed: 'right',
     },
+    afterFetch: (data) => {
+      const result = listToTree(data, {
+        pid: 'parentId',
+      });
+      return result;
+    }
   });
 
   function handleCreate() {

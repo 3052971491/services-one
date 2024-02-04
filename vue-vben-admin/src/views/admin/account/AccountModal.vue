@@ -34,7 +34,7 @@
   const isUpdate = ref(true);
   const rowId = ref('');
 
-  const [registerForm, { setFieldsValue, validate, setProps }] = useForm({
+  const [registerForm, { setFieldsValue, validate, clearValidate, updateSchema }] = useForm({
     name: 'account-modal-form-basic-info',
     labelWidth: '100px',
     baseColProps: { span: 12 },
@@ -59,18 +59,13 @@
     setModalProps({ confirmLoading: true });
     isUpdate.value = !!data?.isUpdate;
     // 当编辑账号时, 密码设置未非必填
-    setProps({
-      schemas: accountBasicFormSchema.map((item) => {
-        if (item.field === 'password') {
-          item.required = !unref(isUpdate);
-          item.defaultValue = !unref(isUpdate) ? 'ABC#123' : ''
-        }
-        return item
-      })
+    updateSchema({
+      field: 'password',
+      defaultValue: !unref(isUpdate) ? 'ABC#123' : '',
+      required: !unref(isUpdate)
     });
     if (unref(isUpdate)) {
       rowId.value = data.record.id;
-      
       setFieldsValue({
         ...data.record,
       });
@@ -83,6 +78,7 @@
         status: 1,
       })
     }
+    clearValidate();
     setModalProps({ confirmLoading: false });
   });
 
