@@ -23,6 +23,7 @@ import { getPermCode } from '@/api/sys/user';
 
 import { useMessage } from '@/hooks/web/useMessage';
 import { PageEnum } from '@/enums/pageEnum';
+import { buildSystemRoutesAction } from '../plugin/route';
 
 interface PermissionState {
   // Permission code list
@@ -110,6 +111,7 @@ export const usePermissionStore = defineStore({
 
     // 构建路由
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
+      return await buildSystemRoutesAction();
       const { t } = useI18n();
       const userStore = useUserStore();
       const appStore = useAppStoreWithOut();
