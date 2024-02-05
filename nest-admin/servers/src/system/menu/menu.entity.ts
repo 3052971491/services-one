@@ -1,12 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { MenuType } from 'src/common/enums/common.enum'
 import { CommonEntity } from 'src/entities/common.entity'
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { $enum } from 'ts-enum-util'
+import { Column, Entity } from 'typeorm'
 
 @Entity('sys_menu')
 export class MenuEntity extends CommonEntity {
-  @ApiProperty({ description: '菜单类型, 1-菜单 2-tabs 3-按钮' })
-  @Column({ type: 'int', comment: 'type 1-菜单/目录 2-tabs 3-按钮' })
-  public type: 1 | 2 | 3
+  @ApiProperty({ description: '菜单类型, 1-菜单 2-tabs 3-按钮', enum: $enum(MenuType).getValues() })
+  @Column({ type: 'int', default: MenuType.TAB, comment: 'type 1-菜单/目录 2-tabs 3-按钮' })
+  public type: MenuType
   
   @ApiProperty({ description: '父级菜单id' })
   @Column({ name: 'parent_id', nullable: true, type: 'bigint' })

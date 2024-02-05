@@ -15,14 +15,13 @@ import { CreateMenuDto } from './dto/create-menu.dto'
 import { UpdateMenuDto } from './dto/update-menu.dto'
 import { MenuType } from 'src/common/enums/common.enum'
 import { FindMenuListDto } from './dto/find-menu-list.dto'
+import { UserEntity } from '../user/user.entity'
 
 @Injectable()
 export class MenuService {
   constructor(
     @InjectRepository(MenuEntity)
     private readonly menuRepo: Repository<MenuEntity>,
-    @InjectRepository(MenuPermEntity)
-    private readonly menuPermRepo: Repository<MenuPermEntity>,
     @InjectEntityManager()
     private readonly menuManager: EntityManager,
     private readonly permService: PermService,
@@ -51,11 +50,11 @@ export class MenuService {
   }
 
   async findAllMenu(dto: FindMenuListDto): Promise<ResultData> {
-    const { name, hasBtn  } = dto;
-    const where = { 
-      ...(Number(hasBtn) ? { type: In([1, 2, 3]) } : { type: In([1, 2]) }), 
+    const { name, hasBtn } = dto
+    const where = {
+      ...(Number(hasBtn) ? { type: In([1, 2, 3]) } : { type: In([1, 2]) }),
       ...(name ? { name: Like(`%${name}%`) } : null),
-      isDeleted: false 
+      isDeleted: false,
     }
     const menuList = await this.menuRepo.find({ where, order: { orderNum: 'ASC' } })
     return ResultData.ok(menuList)
@@ -66,24 +65,45 @@ export class MenuService {
     return ResultData.ok(btnList)
   }
 
-  async findMenuPerms(menuId: string): Promise<ResultData> {
-    const menuPerms = await this.menuPermRepo.find({ where: { menuId } })
-    return ResultData.ok(menuPerms)
-  }
-
-  async deleteMenu(id: string): Promise<ResultData> {
+  async deleteMenu(dto, user: UserEntity): Promise<ResultData> {
+    const { id, ...opt } = dto
     const existing = await this.menuRepo.findOne({ where: { id, isDeleted: false } })
-    if (!existing) return ResultData.fail(AppHttpCode.MENU_NOT_FOUND, '当前菜单不存在或已删除')
+    if (!existing) {
+      return ResultData.fail(AppHttpCode.MENU_NOT_FOUND, '当前菜单不存在或已删除')
+    }
+
     const { affected } = await this.menuManager.transaction(async (transactionalEntityManager) => {
-      await transactionalEntityManager.delete(MenuPermEntity, { menuId: id })
-      const result = await transactionalEntityManager.delete<MenuEntity>(MenuEntity, id)
-      return result
+      async function deleteMenu(menuId: string) {
+        const menu = await transactionalEntityManager.findOne(MenuEntity, { where: { id: menuId, isDeleted: false } })
+        if (!menu) {
+          return
+        }
+
+        // 递归删除子菜单
+        const subMenus = await transactionalEntityManager.find(MenuEntity, {
+          where: { parentId: menuId, isDeleted: false },
+        })
+        for (const subMenu of subMenus) {
+          await deleteMenu(subMenu.id)
+        }
+
+        // 删除当前菜单
+        await transactionalEntityManager.update<MenuEntity>(MenuEntity, menuId, { isDeleted: true, ...opt })
+      }
+
+      await deleteMenu(id)
+
+      return await transactionalEntityManager.update<MenuEntity>(MenuEntity, id, { isDeleted: true, ...opt })
     })
-    if (!affected) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '菜单删除失败，请稍后重试')
+
+    if (!affected) {
+      return ResultData.fail(AppHttpCode.SERVICE_ERROR, '菜单删除失败，请稍后重试')
+    }
+
     await this.permService.clearUserInfoCache()
+
     return ResultData.ok()
   }
-
   async updateMenu(dto: UpdateMenuDto): Promise<ResultData> {
     const existing = await this.menuRepo.findOne({ where: { id: dto.id, isDeleted: false } })
     if (!existing) return ResultData.fail(AppHttpCode.MENU_NOT_FOUND, '当前菜单不存在或已删除')

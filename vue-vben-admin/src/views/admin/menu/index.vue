@@ -35,15 +35,19 @@
   import { useDrawer } from '@/components/Drawer';
   import MenuDrawer from './MenuDrawer.vue';
   import { columns, searchFormSchema } from './menu.data';
-  import { getAllList } from '@/api/admin/menu';
+  import { deleteMenu, getAllList } from '@/api/admin/menu';
   import { listToTree } from '@/utils/helper/treeHelper';
   import { usePermission } from '@/hooks/web/usePermission';
   import { MenuListItem } from '@/api/admin/model/menu';
+  import { useMessage } from '@/hooks/web/useMessage';
+
+  const { refreshMenu } = usePermission();
+  const { createMessage } = useMessage();
 
   defineOptions({ name: 'MenuManagement' });
 
   const [registerDrawer, { openDrawer }] = useDrawer();
-  const [registerTable, { reload, expandAll }] = useTable({
+  const [registerTable, { expandAll }] = useTable({
     title: '菜单列表',
     api: getAllList,
     columns,
@@ -88,13 +92,14 @@
     });
   }
 
-  function handleDelete(record: Recordable) {
+  async function handleDelete(record: Recordable) {
     console.log(record);
+    await deleteMenu({ id: record.id });
+    createMessage.success('删除成功');
+    refreshMenu();
   }
 
   function handleSuccess() {
-    const { refreshMenu } = usePermission();
-    reload();
     refreshMenu();
   }
 

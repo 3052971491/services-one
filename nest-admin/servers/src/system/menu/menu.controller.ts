@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Put, Delete, Param, Query, UseInterceptors } from '@nestjs/common'
+import { Controller, Post, Body, Get, Put, Delete, Param, Query, UseInterceptors, Req } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
 
 import { ApiResult } from '../../common/decorators/api-result.decorator'
@@ -32,12 +32,12 @@ export class MenuController {
     return await this.menuService.findBtnByParentId(parentId)
   }
 
-  @Get('one/:id/menu-perm')
-  @ApiOperation({ summary: '查询单个菜单权限' })
-  @ApiResult(MenuPermEntity, true)
-  async findMenuPerms(@Param('id') id: string): Promise<ResultData> {
-    return await this.menuService.findMenuPerms(id)
-  }
+  // @Get('one/:id/menu-perm')
+  // @ApiOperation({ summary: '查询单个菜单权限' })
+  // @ApiResult(MenuPermEntity, true)
+  // async findMenuPerms(@Param('id') id: string): Promise<ResultData> {
+  //   return await this.menuService.findMenuPerms(id)
+  // }
 
   @Post()
   @UseInterceptors(UpdateInterceptor)
@@ -48,16 +48,18 @@ export class MenuController {
   }
 
   @Put()
+  @UseInterceptors(UpdateInterceptor)
   @ApiOperation({ summary: '更新菜单' })
   @ApiResult()
   async updateMenu(@Body() dto: UpdateMenuDto): Promise<ResultData> {
     return await this.menuService.updateMenu(dto)
   }
 
-  @Delete(':id')
+  @Delete()
+  @UseInterceptors(UpdateInterceptor)
   @ApiOperation({ summary: '删除菜单' })
   @ApiResult()
-  async delete(@Param('id') id: string): Promise<ResultData> {
-    return await this.menuService.deleteMenu(id)
+  async delete(@Body() body, @Req() req): Promise<ResultData> {
+    return await this.menuService.deleteMenu(body, req)
   }
 }
