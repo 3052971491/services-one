@@ -13,16 +13,10 @@ import { generateRandomSystemAccount, getCurrentTimestamp, getRedisKey } from '.
 import { RedisKeyPrefix } from '../../common/enums/redis-key-prefix.enum'
 import { AppHttpCode } from '../../common/enums/code.enum'
 import { RedisService } from '../../common/libs/redis/redis.service'
-
 import { validPhone, validEmail } from '../../common/utils/validate'
 import { UserType } from '../../common/enums/common.enum'
-
 import { PermService } from '../perm/perm.service'
-
-import { UserRoleService } from './role/user-role.service'
-
 import { UserEntity } from './user.entity'
-
 import { CreateUserDto } from './dto/create-user.dto'
 import { RegisterUserDto } from './dto/register-user.dto'
 import { FindUserListDto } from './dto/find-user-list.dto'
@@ -44,7 +38,6 @@ export class UserService {
     private readonly config: ConfigService,
     private readonly redisService: RedisService,
     private readonly jwtService: JwtService,
-    private readonly userRoleService: UserRoleService,
     private readonly permService: PermService,
   ) {}
 

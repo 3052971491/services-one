@@ -2,13 +2,10 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository, InjectEntityManager } from '@nestjs/typeorm'
 import { Repository, EntityManager, DataSource, Like, Between, Not } from 'typeorm'
 import { plainToInstance } from 'class-transformer'
-
 import { AppHttpCode } from '../../common/enums/code.enum'
 import { UserType } from '../../common/enums/common.enum'
 import { ResultData } from '../../common/utils/result'
-
 import { RoleEntity } from './role.entity'
-import { RoleMenuEntity } from './role-menu.entity'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
 import { UserEntity } from '../user/user.entity'
@@ -22,8 +19,6 @@ export class RoleService {
     private readonly roleRepo: Repository<RoleEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
-    @InjectRepository(RoleMenuEntity)
-    private readonly roleMenuRepo: Repository<RoleMenuEntity>,
     @InjectEntityManager()
     private readonly roleManager: EntityManager,
     private readonly dataSource: DataSource,
@@ -118,10 +113,10 @@ export class RoleService {
     return ResultData.ok()
   }
 
-  async findOnePerm(id: string): Promise<ResultData> {
-    const roleMenu = await this.roleMenuRepo.find({ select: ['menuId'], where: { roleId: id } })
-    return ResultData.ok(roleMenu.map((v) => v.menuId))
-  }
+  // async findOnePerm(id: string): Promise<ResultData> {
+  //   const roleMenu = await this.roleMenuRepo.find({ select: ['menuId'], where: { roleId: id } })
+  //   return ResultData.ok(roleMenu.map((v) => v.menuId))
+  // }
 
   async findList(type: UserType, userId: string, params: FindRoleListDto): Promise<ResultData> {
     let roleData = []

@@ -1,9 +1,7 @@
-import { Controller, Get, Post, Put, Param, Delete, Body, Req, Query, UseInterceptors } from '@nestjs/common'
+import { Controller, Get, Post, Put, Delete, Body, Req, Query, UseInterceptors } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-
 import { ResultData } from '../../common/utils/result'
 import { ApiResult } from '../../common/decorators/api-result.decorator'
-
 import { RoleService } from './role.service'
 import { RoleEntity } from './role.entity'
 import { CreateRoleDto } from './dto/create-role.dto'
@@ -23,12 +21,12 @@ export class RoleController {
     return await this.roleService.findList(req.user.isSystem, req.user.id, query)
   }
 
-  @Get('one/:id/perms')
-  @ApiOperation({ summary: '查询单个角色详情及权限菜单' })
-  @ApiResult(RoleEntity)
-  async findOne(@Param('id') id: string): Promise<ResultData> {
-    return await this.roleService.findOnePerm(id)
-  }
+  // @Get('one/:id/perms')
+  // @ApiOperation({ summary: '查询单个角色详情及权限菜单' })
+  // @ApiResult(RoleEntity)
+  // async findOne(@Param('id') id: string): Promise<ResultData> {
+  //   return await this.roleService.findOnePerm(id)
+  // }
 
   @Post()
   @UseInterceptors(UpdateInterceptor)

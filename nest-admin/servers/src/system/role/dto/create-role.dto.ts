@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsString, Length, IsOptional, IsArray, IsNumber, IsNotEmpty } from 'class-validator'
+
 export class CreateRoleDto {
   @ApiProperty({ description: '角色名称' })
   @IsString({ message: 'name 类型错误, 正确类型 string' })

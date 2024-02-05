@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger'
-
 import { ReqListQuery } from '../../../common/utils/req-list-query'
 
 export class FindRoleListDto extends ReqListQuery {
