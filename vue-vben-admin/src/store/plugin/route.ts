@@ -5,10 +5,12 @@ import { useMessage } from '@/hooks/web/useMessage';
 import { useI18n } from '@/hooks/web/useI18n';
 import { PageEnum } from '@/enums/pageEnum';
 import { useUserStore } from '../modules/user';
-import { filter } from '@/utils/helper/treeHelper';
+import { filter, listToTree } from '@/utils/helper/treeHelper';
 import { usePermissionStore } from '@/store/modules/permission';
-import { flatMultiLevelRoutes } from '@/router/helper/routeHelper';
+import { flatMultiLevelRoutes, transformObjToRoute } from '@/router/helper/routeHelper';
 import { toRaw } from 'vue';
+import { getAllList } from '@/api/admin/menu';
+import { MenuListItem, MenuType } from '@/api/admin/model/menu';
 
 /**
  * 生成系统路由
@@ -89,13 +91,53 @@ const routeRemoveIgnoreFilter = (route: AppRouteRecordRaw) => {
 };
 
 async function getFrontRoutes() {
-  let routes = filter(asyncRoutes, routeFilter)
+  let routes = filter(asyncRoutes, routeFilter);
   const menuList = transformRouteToMenu(routes, true);
   routes = flatMultiLevelRoutes(routes);
   return [routes, menuList];
 }
 
 async function getBackRoutes() {
-  
-  return [[], []];
+  let result = await getAllList();
+  let routes: AppRouteRecordRaw[] = [];
+
+  routes = transformToRoute(result);
+  // 动态引入组件
+  routes = transformObjToRoute(routes);
+  //  后台路由到菜单结构
+  const backMenuList = transformRouteToMenu(routes);
+
+  routes = routes.filter(routeRemoveIgnoreFilter);
+  routes = flatMultiLevelRoutes(routes);
+
+  return [routes, backMenuList];
+}
+
+function transformToRoute(menus: MenuListItem[]): AppRouteRecordRaw[] {
+  let routes: AppRouteRecordRaw[] = menus.map((item) => {
+    let obj: AppRouteRecordRaw = {
+      id: item.id,
+      parentId: item.parentId || undefined,
+      name: item.name,
+      meta: {
+        title: item.name,
+        orderNo: item.orderNum,
+        icon: item.icon,
+        ignoreKeepAlive: true,
+      },
+      path: item.routePath || '',
+      component: item.componentPath || undefined,
+    };
+    if (item.type === MenuType.MENU) {
+      obj.children = [];
+      obj.component = 'LAYOUT';
+    }
+    return obj;
+  });
+
+  // list to tree
+  routes = listToTree(routes, {
+    pid: 'parentId',
+  });
+  return routes;
 }

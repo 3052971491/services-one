@@ -40,6 +40,7 @@
   import { columns, searchFormSchema } from './menu.data';
   import { getAllList } from '@/api/admin/menu';
 import { listToTree } from '@/utils/helper/treeHelper';
+import { usePermission } from '@/hooks/web/usePermission';
 
   defineOptions({ name: 'MenuManagement' });
 
@@ -91,7 +92,9 @@ import { listToTree } from '@/utils/helper/treeHelper';
   }
 
   function handleSuccess() {
+    const { refreshMenu } = usePermission();
     reload();
+    refreshMenu();
   }
 
   function onFetchSuccess() {

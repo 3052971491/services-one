@@ -28,6 +28,7 @@ export interface CreateOrUpdateMenuParams {
 }
 
 export interface MenuListItem {
+  id: string;
   type: MenuType;
   parentId?: string;
   name: string;
