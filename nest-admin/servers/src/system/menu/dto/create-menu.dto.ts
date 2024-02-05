@@ -35,11 +35,6 @@ export class CreateMenuDto {
   @IsOptional()
   readonly routePath: string
 
-  @ApiProperty({ description: '状态, 1-启用 0-禁用', enum: $enum(StatusValue).getValues(), required: false })
-  @IsNumber({}, { message: 'status 类型错误' })
-  @IsIn($enum(StatusValue).getValues(), { message: '状态, 1-启用 0-禁用' })
-  readonly status: StatusValue
-
   @ApiProperty({ description: '权限标识' })
   @IsString()
   @Length(0, 128, { message: 'permission 字符长度在 0~128' })

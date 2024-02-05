@@ -16,11 +16,8 @@
   import { BasicForm, useForm } from '@/components/Form';
   import { formSchema } from './menu.data';
   import { BasicDrawer, useDrawerInner } from '@/components/Drawer';
-  import { useMessage } from '@/hooks/web/useMessage';
   import { createMenu, getAllList, updateMenu } from '@/api/admin/menu';
   import { listToTree } from '@/utils/helper/treeHelper';
-
-  const { createMessage } = useMessage();
 
   defineOptions({ name: 'MenuDrawer' });
 
@@ -64,10 +61,8 @@
       const orderNum = parseInt(num);
       if (unref(isUpdate)) {
         await updateMenu({ ...values, orderNum, id: unref(rowId) });
-        createMessage.success('更新成功');
       } else {
         await createMenu({ ...values, orderNum });
-        createMessage.success('新增成功');
       }
       closeDrawer();
       emit('success');

@@ -10,7 +10,7 @@ const admin: AppRouteModule = {
   redirect: '/admin/account',
   meta: {
     orderNo: 8888,
-    icon: 'ion:settings-outline',
+    icon: 'icon-park-outline:coordinate-system',
     title: t('routes.admin.admin.moduleName'),
   },
   children: [

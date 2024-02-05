@@ -39,10 +39,8 @@
   import { listToTree } from '@/utils/helper/treeHelper';
   import { usePermission } from '@/hooks/web/usePermission';
   import { MenuListItem } from '@/api/admin/model/menu';
-  import { useMessage } from '@/hooks/web/useMessage';
 
   const { refreshMenu } = usePermission();
-  const { createMessage } = useMessage();
 
   defineOptions({ name: 'MenuManagement' });
 
@@ -95,7 +93,6 @@
   async function handleDelete(record: Recordable) {
     console.log(record);
     await deleteMenu({ id: record.id });
-    createMessage.success('删除成功');
     refreshMenu();
   }
 

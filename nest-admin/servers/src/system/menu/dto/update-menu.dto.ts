@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsIn, IsNumber, IsString, Min, IsNotEmpty, Length, IsOptional } from 'class-validator';
 import { $enum } from 'ts-enum-util'
-
-import { MenuType, StatusValue } from '../../../common/enums/common.enum'
+import { MenuType } from '../../../common/enums/common.enum'
 
 export class UpdateMenuDto {
   @ApiProperty({ description: 'id' })
@@ -40,11 +39,6 @@ export class UpdateMenuDto {
   @Length(0, 120, { message: 'routePath 字符长度在 0~34' })
   @IsOptional()
   readonly routePath: string
-
-  @ApiProperty({ description: '状态, 1-启用 0-禁用', enum: $enum(StatusValue).getValues(), required: false })
-  @IsNumber({}, { message: 'status 类型错误' })
-  @IsIn($enum(StatusValue).getValues(), { message: '状态, 1-启用 0-禁用' })
-  readonly status: StatusValue
 
   @ApiProperty({ description: '权限标识' })
   @IsString()

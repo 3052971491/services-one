@@ -1,8 +1,7 @@
 import { BasicColumn, FormSchema } from '@/components/Table';
 import { h } from 'vue';
-import { Tag } from 'ant-design-vue';
 import Icon from '@/components/Icon/Icon.vue';
-import { MenuType, StatusValue } from '@/api/admin/model/menu';
+import { MenuType } from '@/api/admin/model/menu';
 
 export const columns: BasicColumn[] = [
   {
@@ -117,7 +116,6 @@ export const formSchema: FormSchema[] = [
     field: 'icon',
     label: '图标',
     component: 'IconPicker',
-    required: true,
     ifShow: ({ values }) => !isButton(values.type),
   },
   {
