@@ -57,7 +57,7 @@ export class MenuService {
       ...(name ? { name: Like(`%${name}%`) } : null),
       isDeleted: false 
     }
-    const menuList = await this.menuRepo.find({ where, order: { orderNum: 'DESC', id: 'ASC' } })
+    const menuList = await this.menuRepo.find({ where, order: { orderNum: 'ASC' } })
     return ResultData.ok(menuList)
   }
 

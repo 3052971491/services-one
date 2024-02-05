@@ -31,16 +31,14 @@
 </template>
 <script lang="ts" setup>
   import { nextTick } from 'vue';
-
   import { BasicTable, useTable, TableAction } from '@/components/Table';
-
   import { useDrawer } from '@/components/Drawer';
   import MenuDrawer from './MenuDrawer.vue';
-
   import { columns, searchFormSchema } from './menu.data';
   import { getAllList } from '@/api/admin/menu';
-import { listToTree } from '@/utils/helper/treeHelper';
-import { usePermission } from '@/hooks/web/usePermission';
+  import { listToTree } from '@/utils/helper/treeHelper';
+  import { usePermission } from '@/hooks/web/usePermission';
+  import { MenuListItem } from '@/api/admin/model/menu';
 
   defineOptions({ name: 'MenuManagement' });
 
@@ -66,12 +64,15 @@ import { usePermission } from '@/hooks/web/usePermission';
       dataIndex: 'action',
       fixed: 'right',
     },
-    afterFetch: (data) => {
+    afterFetch: (data: MenuListItem[]) => {
+      data = data.sort((a, b) => {
+        return a.orderNum - b.orderNum;
+      });
       const result = listToTree(data, {
         pid: 'parentId',
       });
       return result;
-    }
+    },
   });
 
   function handleCreate() {
