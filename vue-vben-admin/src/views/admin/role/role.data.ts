@@ -63,16 +63,28 @@ export const formSchema: FormSchema[] = [
     label: '角色名称',
     required: true,
     component: 'Input',
+    componentProps: {
+      showCount: true,
+      maxlength: 50
+    }
   },
   {
     field: 'value',
     label: '角色值',
     required: true,
     component: 'Input',
+    componentProps: {
+      showCount: true,
+      maxlength: 50
+    }
   },
   {
     label: '备注',
     field: 'remark',
     component: 'InputTextArea',
+    componentProps: {
+      showCount: true,
+      maxlength: 200
+    }
   },
 ];

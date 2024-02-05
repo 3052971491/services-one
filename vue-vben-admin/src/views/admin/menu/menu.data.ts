@@ -7,7 +7,7 @@ export const columns: BasicColumn[] = [
   {
     title: '菜单名称',
     dataIndex: 'name',
-    width: 200,
+    width: 240,
     align: 'left',
   },
   {
@@ -23,10 +23,15 @@ export const columns: BasicColumn[] = [
   {
     title: '权限标识',
     dataIndex: 'permission',
-    width: 180,
+    width: 240,
   },
   {
-    title: '组件',
+    title: '路由地址',
+    dataIndex: 'routePath',
+    width: 200,
+  },
+  {
+    title: '组件地址',
     dataIndex: 'componentPath',
   },
   {

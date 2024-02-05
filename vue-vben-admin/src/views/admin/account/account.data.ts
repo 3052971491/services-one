@@ -2,6 +2,7 @@ import { getAllRoleList } from '@/api/demo/system';
 import { BasicColumn, FormSchema } from '@/components/Table';
 import { h } from 'vue';
 import { Tag } from 'ant-design-vue';
+import { Reg } from '@/utils/validate';
 
 export const columns: BasicColumn[] = [
   {
@@ -89,7 +90,7 @@ export const searchFormSchema: FormSchema[] = [
     label: '手机号码',
     component: 'Input',
     colProps: { span: 6 },
-    isAdvanced: true
+    isAdvanced: true,
   },
   {
     field: 'email',
@@ -117,18 +118,38 @@ export const accountBasicFormSchema: FormSchema[] = [
     field: 'email',
     component: 'Input',
     required: true,
+    rules: [
+      {
+        pattern: Reg.get('Email'),
+        message: '请输入正确的邮箱',
+      },
+    ]
   },
   {
     field: 'nickname',
     label: '昵称',
     component: 'Input',
     required: true,
+    rules: [
+      { min: 6, message: '必须大于6个字符' },
+      { max: 25, message: '必须小于25个字符' },
+    ],
+    componentProps: {
+      showCount: true,
+      maxlength: 25
+    }
   },
   {
     field: 'phoneNum',
     label: '手机号码',
     component: 'Input',
     required: true,
+    rules: [
+      {
+        pattern: Reg.get('Phone'),
+        message: '请输入正确的手机号码',
+      },
+    ]
   },
   {
     field: 'password',
@@ -158,6 +179,10 @@ export const accountBasicFormSchema: FormSchema[] = [
     label: '备注',
     field: 'remark',
     component: 'InputTextArea',
+    componentProps: {
+      showCount: true,
+      maxlength: 200
+    }
   },
 ];
 

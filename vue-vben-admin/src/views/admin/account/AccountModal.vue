@@ -36,22 +36,22 @@
 
   const [registerForm, { setFieldsValue, validate, clearValidate, updateSchema }] = useForm({
     name: 'account-modal-form-basic-info',
-    labelWidth: '100px',
+    labelWidth: '80px',
     baseColProps: { span: 12 },
     schemas: accountBasicFormSchema,
     showActionButtonGroup: false,
     actionColOptions: {
-      span: 23,
+      span: 24,
     },
   });
   const [registerForm2, obj] = useForm({
     name: 'account-modal-form-permissions',
-    labelWidth: '100px',
+    labelWidth: '80px',
     baseColProps: { span: 12 },
     schemas: accountRoleFormSchema,
     showActionButtonGroup: false,
     actionColOptions: {
-      span: 23,
+      span: 24,
     },
   });
 
