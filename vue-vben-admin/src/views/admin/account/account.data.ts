@@ -7,7 +7,6 @@ export const columns: BasicColumn[] = [
   {
     title: '账号',
     dataIndex: 'account',
-    width: 240,
     fixed: 'left',
     customRender: ({ record }) => {
       if (record.isSystem === 1) {
@@ -62,7 +61,7 @@ export const columns: BasicColumn[] = [
   {
     title: '备注',
     dataIndex: 'remark',
-    width: 400,
+    width: 240,
   },
   {
     title: '创建时间',

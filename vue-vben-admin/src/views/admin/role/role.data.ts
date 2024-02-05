@@ -6,8 +6,6 @@ export const columns: BasicColumn[] = [
   {
     title: '角色名称',
     dataIndex: 'name',
-    width: 240,
-    fixed: 'left',
     customRender: ({ record }) => {
       if (record.isSystem === 1) {
         return record.name
