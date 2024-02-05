@@ -135,7 +135,7 @@ export class RoleService {
         // 添加创建时间范围条件
         where.createdAt = Between(params.startDate, params.endDate) 
       }
-      roleData = await this.roleRepo.find({ order: { id: 'DESC' }, where: where })
+      roleData = await this.roleRepo.find({ order: { createdAt: 'DESC' }, where: where })
     } else {
       roleData = await this.dataSource
         .createQueryBuilder('sys_role', 'sr')

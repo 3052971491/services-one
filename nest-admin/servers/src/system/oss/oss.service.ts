@@ -94,7 +94,7 @@ export class OssService {
     if (name) {
       where.name = Like(`%${name}%`)
     }
-    const res = await this.ossRepo.findAndCount({ order: { id: 'DESC' }, skip: size * (page - 1), take: size, where })
+    const res = await this.ossRepo.findAndCount({ order: { createDate: 'DESC' }, skip: size * (page - 1), take: size, where })
     return ResultData.ok({ list: instanceToPlain(res[0]), total: res[1] })
   }
 }
