@@ -1,17 +1,13 @@
 import { Controller, Post, Body, Get, Put, Delete, Param, Query, UseInterceptors, Req } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-
 import { ApiResult } from '../../common/decorators/api-result.decorator'
 import { ResultData } from '../../common/utils/result'
-
 import { MenuService } from './menu.service'
 import { MenuEntity } from './menu.entity'
-import { MenuPermEntity } from './menu-perm.entity'
 import { CreateMenuDto } from './dto/create-menu.dto'
 import { UpdateMenuDto } from './dto/update-menu.dto'
 import { UpdateInterceptor } from 'src/common/guards/update.interceptor'
 import { FindMenuListDto } from './dto/find-menu-list.dto'
-
 @ApiTags('菜单与菜单权限管理')
 @ApiBearerAuth()
 @Controller('menu')
@@ -25,12 +21,12 @@ export class MenuController {
     return await this.menuService.findAllMenu(dto)
   }
 
-  @Get('one/:parentId/btns')
-  @ApiOperation({ summary: '查询单个菜单下的所有按钮' })
-  @ApiResult(MenuEntity, true)
-  async findBtnByParentId(@Param('parentId') parentId: string): Promise<ResultData> {
-    return await this.menuService.findBtnByParentId(parentId)
-  }
+  // @Get('one/:parentId/btns')
+  // @ApiOperation({ summary: '查询单个菜单下的所有按钮' })
+  // @ApiResult(MenuEntity, true)
+  // async findBtnByParentId(@Param('parentId') parentId: string): Promise<ResultData> {
+  //   return await this.menuService.findBtnByParentId(parentId)
+  // }
 
   // @Get('one/:id/menu-perm')
   // @ApiOperation({ summary: '查询单个菜单权限' })

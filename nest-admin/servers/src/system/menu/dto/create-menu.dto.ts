@@ -1,10 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsArray, IsIn, IsNumber, IsString, Min, IsNotEmpty, Length, IsNumberString, IsOptional } from 'class-validator';
+import { IsIn, IsNumber, IsString, Min, Length, IsOptional } from 'class-validator';
 import { $enum } from 'ts-enum-util'
-
 import { MenuType, StatusValue } from '../../../common/enums/common.enum'
-
-import { MenuPermDto } from './menu-perm.dto'
 
 export class CreateMenuDto {
   @ApiProperty({ description: '菜单类型 1-菜单/目录 2-tabs 3-按钮', enum: $enum(MenuType).getValues(), required: false })

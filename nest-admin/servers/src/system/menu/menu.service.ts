@@ -2,16 +2,11 @@ import { Injectable } from '@nestjs/common'
 import { Repository, In, EntityManager, Like } from 'typeorm'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
-
 import { ResultData } from '../../common/utils/result'
 import { AppHttpCode } from '../../common/enums/code.enum'
-
 import { PermService } from '../perm/perm.service'
-
 import { MenuEntity } from './menu.entity'
-import { MenuPermEntity } from './menu-perm.entity'
 import { CreateMenuDto } from './dto/create-menu.dto'
-
 import { UpdateMenuDto } from './dto/update-menu.dto'
 import { MenuType } from 'src/common/enums/common.enum'
 import { FindMenuListDto } from './dto/find-menu-list.dto'

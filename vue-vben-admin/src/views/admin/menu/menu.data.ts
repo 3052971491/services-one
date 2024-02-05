@@ -37,18 +37,6 @@ export const columns: BasicColumn[] = [
     align: 'center',
   },
   {
-    title: '状态',
-    dataIndex: 'status',
-    width: 80,
-    customRender: ({ record }) => {
-      const status = record.status;
-      const enable = status === StatusValue.NORMAL;
-      const color = enable ? 'green' : 'red';
-      const text = enable ? '启用' : '停用';
-      return h(Tag, { color: color }, () => text);
-    },
-  },
-  {
     title: '创建时间',
     dataIndex: 'createdAt',
     width: 180,
@@ -122,6 +110,7 @@ export const formSchema: FormSchema[] = [
     field: 'orderNum',
     label: '排序',
     component: 'InputNumber',
+    helpMessage: '升序',
     required: true,
   },
   {
@@ -131,12 +120,17 @@ export const formSchema: FormSchema[] = [
     required: true,
     ifShow: ({ values }) => !isButton(values.type),
   },
-
   {
     field: 'routePath',
     label: '路由地址',
     component: 'Input',
     required: true,
+    helpMessage: `设置菜单的路由地址，对应组件目录为 /views/ 下的 vue 文件
+    路由名称定义规则为: Views + 去除地址的 “/”，并后一个字母大写，
+    例如：路由地址为：/admin/menu, 路径名称为: Menu,
+    组件名称定义规则为：/views/ 目录 + 路由地址 目录，上面举例的路由地址
+    对应的组件名称应为：/views/admin/menu, 组件名称: 与路由名称相同
+    注意：如果组件名称与路由名称不同，会造成页面缓存失效。`,
     ifShow: ({ values }) => !isButton(values.type),
   },
   {
@@ -149,18 +143,7 @@ export const formSchema: FormSchema[] = [
     field: 'permission',
     label: '权限标识',
     component: 'Input',
+    helpMessage: `控制器中定义的权限标识，如：@RequiresPermissions('权限标识')`,
     ifShow: ({ values }) => !isDir(values.type),
-  },
-  {
-    field: 'status',
-    label: '状态',
-    component: 'RadioButtonGroup',
-    defaultValue: StatusValue.NORMAL,
-    componentProps: {
-      options: [
-        { label: '启用', value: StatusValue.NORMAL },
-        { label: '禁用', value: StatusValue.FORBIDDEN },
-      ],
-    },
-  },
+  }
 ];

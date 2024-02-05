@@ -9,7 +9,7 @@ export class MenuEntity extends CommonEntity {
   @ApiProperty({ description: '菜单类型, 1-菜单 2-tabs 3-按钮', enum: $enum(MenuType).getValues() })
   @Column({ type: 'int', default: MenuType.TAB, comment: 'type 1-菜单/目录 2-tabs 3-按钮' })
   public type: MenuType
-  
+
   @ApiProperty({ description: '父级菜单id' })
   @Column({ name: 'parent_id', nullable: true, type: 'bigint' })
   public parentId: string
@@ -31,7 +31,7 @@ export class MenuEntity extends CommonEntity {
   public routePath: string
 
   @ApiProperty({ description: '状态, 1-启用 0-禁用' })
-  @Column({ type: 'int', comment: '状态, 1-启用 0-禁用' })
+  @Column({ type: 'int', default: 1, comment: '状态, 1-启用 0-禁用' })
   public status: 0 | 1
 
   @ApiProperty({ description: '权限标识' })
