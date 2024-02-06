@@ -8,21 +8,29 @@ export const columns: BasicColumn[] = [
     dataIndex: 'name',
     customRender: ({ record }) => {
       if (record.isSystem === 1) {
-        return record.name
+        return record.name;
       }
       return h('span', {}, [
-        h('span', {
-          style: {
-            marginRight: '6px'
-          }
-        }, record.name),
-        h(Tag, {
-          bordered: false,
-          color: 'processing'
-        }, {
-          default: () => h('span', '系统')
-        })
-      ])
+        h(
+          'span',
+          {
+            style: {
+              marginRight: '6px',
+            },
+          },
+          record.name,
+        ),
+        h(
+          Tag,
+          {
+            bordered: false,
+            color: 'processing',
+          },
+          {
+            default: () => h('span', '系统'),
+          },
+        ),
+      ]);
     },
   },
   {
@@ -51,7 +59,7 @@ export const searchFormSchema: FormSchema[] = [
     component: 'RangePicker',
     componentProps: {
       placeholder: ['开始时间', '结束时间'],
-      showTime: true
+      showTime: true,
     },
     colProps: { span: 6 },
   },
@@ -65,8 +73,8 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     componentProps: {
       showCount: true,
-      maxlength: 50
-    }
+      maxlength: 50,
+    },
   },
   {
     field: 'value',
@@ -75,8 +83,8 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     componentProps: {
       showCount: true,
-      maxlength: 50
-    }
+      maxlength: 50,
+    },
   },
   {
     label: '备注',
@@ -84,7 +92,17 @@ export const formSchema: FormSchema[] = [
     component: 'InputTextArea',
     componentProps: {
       showCount: true,
-      maxlength: 200
-    }
+      maxlength: 200,
+    },
+  },
+];
+
+export const permissionFormSchema: FormSchema[] = [
+  {
+    label: '权限',
+    field: 'permission',
+    slot: 'permission',
+    required: true,
+    defaultValue: []
   },
 ];

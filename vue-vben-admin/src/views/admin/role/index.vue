@@ -10,7 +10,13 @@
             :actions="[
               {
                 icon: 'clarity:note-edit-line',
+                tooltip: '编辑角色信息',
                 onClick: handleEdit.bind(null, record),
+              },
+              {
+                icon: 'icon-park-outline:permissions',
+                tooltip: '权限分配',
+                onClick: handlePermission.bind(null, record),
               },
               {
                 icon: 'ant-design:delete-outlined',
@@ -28,6 +34,7 @@
       </template>
     </BasicTable>
     <RoleModal @register="registerModal" @success="handleSuccess" />
+    <MenuPermissionModal :width="900" @register="registerPermissionModal" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -36,6 +43,7 @@
 
   import { useModal } from '@/components/Modal';
   import RoleModal from './RoleModal.vue';
+  import MenuPermissionModal from './MenuPermissionModal.vue';
 
   import { columns, searchFormSchema } from './role.data';
   import { useMessage } from '@/hooks/web/useMessage';
@@ -44,6 +52,7 @@
   defineOptions({ name: 'RoleManagement' });
 
   const [registerModal, { openModal }] = useModal();
+  const [registerPermissionModal, permissionModal] = useModal();
   const [registerTable, { reload }] = useTable({
     title: '角色列表',
     api: getRoleListByPage,
@@ -65,7 +74,7 @@
       };
     },
     actionColumn: {
-      width: 80,
+      width: 120,
       title: '操作',
       dataIndex: 'action',
       // slots: { customRender: 'action' },
@@ -92,6 +101,12 @@
     await deleteRole(record.id)
     createMessage.success('删除成功')
     reload();
+  }
+
+  function handlePermission(record: Recordable) {
+    permissionModal.openModal(true, {
+      record,
+    });
   }
 
   function handleSuccess() {
