@@ -181,7 +181,11 @@ export const accountBasicFormSchema: FormSchema[] = [
     component: 'InputTextArea',
     componentProps: {
       showCount: true,
-      maxlength: 200
+      maxlength: 200,
+      autoSize:{ minRows: 3, maxRows: 3 }
+    },
+    colProps: {
+      span: 24
     }
   },
 ];
