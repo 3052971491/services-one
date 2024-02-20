@@ -96,13 +96,3 @@ export const formSchema: FormSchema[] = [
     },
   },
 ];
-
-export const permissionFormSchema: FormSchema[] = [
-  {
-    label: '权限',
-    field: 'permission',
-    slot: 'permission',
-    required: true,
-    defaultValue: []
-  },
-];
