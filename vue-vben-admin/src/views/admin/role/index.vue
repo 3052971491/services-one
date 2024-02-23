@@ -11,17 +11,19 @@
               {
                 icon: 'clarity:note-edit-line',
                 tooltip: '编辑角色信息',
+                ifShow: record.isSystem !== 0,
                 onClick: handleEdit.bind(null, record),
               },
               {
                 icon: 'icon-park-outline:permissions',
                 tooltip: '权限分配',
+                ifShow: record.isSystem !== 0,
                 onClick: handlePermission.bind(null, record),
               },
               {
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
-                disabled: record.isSystem === 0,
+                ifShow: record.isSystem !== 0,
                 popConfirm: {
                   title: '是否确认删除',
                   placement: 'left',
