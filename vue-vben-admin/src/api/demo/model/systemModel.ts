@@ -26,6 +26,8 @@ export type RoleParams = {
   name?: string;
   value?: string;
   remark?: string;
+  menus?: string[];
+  apis?: string[];
   [key: string]: any;
 };
 

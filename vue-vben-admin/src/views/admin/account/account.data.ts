@@ -48,14 +48,14 @@ export const columns: BasicColumn[] = [
     dataIndex: 'role',
     width: 240,
     customRender: ({ record }) => {
-      return record.roles.map((item) => {
+      return h('div', record.roles.map((item) => {
         return h(Tag, {
           bordered: false,
           color: 'processing'
         }, {
-          default: () => h('span', item.name)
+          default: () => h('div', item.name)
         })
-      })
+      }))
       
     }
   },

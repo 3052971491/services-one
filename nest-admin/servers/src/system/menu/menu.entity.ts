@@ -2,7 +2,8 @@ import { ApiProperty } from '@nestjs/swagger'
 import { MenuType } from 'src/common/enums/common.enum'
 import { CommonEntity } from 'src/entities/common.entity'
 import { $enum } from 'ts-enum-util'
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, JoinTable, ManyToMany } from 'typeorm'
+import { RoleEntity } from '../role/role.entity'
 
 @Entity('sys_menu')
 export class MenuEntity extends CommonEntity {
@@ -41,4 +42,8 @@ export class MenuEntity extends CommonEntity {
   @ApiProperty({ description: '组件路径' })
   @Column({ type: 'varchar', length: 256, nullable: true, comment: '组件路径' })
   public componentPath: string
+
+  @ManyToMany(() => RoleEntity, (role) => role.menus)
+  @JoinTable()
+  roles: RoleEntity[];
 }

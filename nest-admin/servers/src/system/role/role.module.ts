@@ -5,9 +5,10 @@ import { RoleController } from './role.controller'
 import { RoleService } from './role.service'
 import { RoleEntity } from './role.entity'
 import { UserEntity } from '../user/user.entity'
+import { MenuEntity } from '../menu/menu.entity'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, RoleEntity]), PermModule],
+  imports: [TypeOrmModule.forFeature([UserEntity, RoleEntity, MenuEntity]), PermModule],
   providers: [
     RoleService,
   ],

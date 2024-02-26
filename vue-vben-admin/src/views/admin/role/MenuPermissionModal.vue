@@ -13,13 +13,14 @@
         >
           <template #children="{ direction, selectedKeys, onItemSelect }">
             <Tree
-              v-if="direction === 'left'"
+              v-if="direction === 'left' && menu.length"
               block-node
               checkable
               check-strictly
               default-expand-all
+              autoExpandParent
               :checked-keys="[...selectedKeys, ...menu]"
-              :tree-data="menuTreeData"
+              v-model:tree-data="menuTreeData"
               @check="
                 (_, props) => {
                   onChecked(props, [...selectedKeys, ...menu], onItemSelect);
@@ -46,6 +47,8 @@
   import { useMessage } from '@/hooks/web/useMessage';
   import { getAllList } from '@/api/admin/menu';
   import { listToTree } from '@/utils/helper/treeHelper';
+  import { updateRole } from '@/api/demo/system';
+import { cloneDeep } from 'lodash-es';
   const { createMessage } = useMessage();
 
   defineOptions({ name: 'MenuPermissionModal' });
@@ -56,9 +59,14 @@
   const getTitle = computed(() => '权限分配');
 
   const menu = ref<string[]>([]);
+  const tData = ref<NonNullable<TransferProps['dataSource']>>([]);
+  const transferDataSource: NonNullable<TransferProps['dataSource']> = [];
+  const menuDataSource = ref(transferDataSource);
+  const menuTreeData = ref(handleTreeData(tData.value, []));
+
   const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
-    setModalProps({ confirmLoading: false });
-    const { permission = [] } = data.record;
+    setModalProps({ confirmLoading: true });
+    const { menus = [] } = data.record;
     rowId.value = data.record.id;
     // 获取所有的菜单列表
     let menuList = await getAllList();
@@ -78,15 +86,15 @@
     );
     // 转成树形结构
     tData.value = menuList;
-    flatten(JSON.parse(JSON.stringify(tData.value)));
+    flatten(cloneDeep(tData.value));
     // 初始化数据
-    menu.value = permission;
-    menuTreeData.value = handleTreeData(tData.value, permission);
+    menu.value = menus.map((item) => item.id);
+    menuTreeData.value = handleTreeData(tData.value, menu.value);
+    setModalProps({ confirmLoading: false });
   });
   
 
-  const tData = ref<NonNullable<TransferProps['dataSource']>>([]);
-  const transferDataSource: NonNullable<TransferProps['dataSource']> = [];
+  
   function flatten(list: TransferProps['dataSource'] = []) {
     list.forEach((item) => {
       transferDataSource.push(item);
@@ -103,8 +111,7 @@
       children: handleTreeData(children ?? [], targetKeys),
     }));
   }
-  const menuDataSource = ref(transferDataSource);
-  const menuTreeData = ref(handleTreeData(tData.value, []));
+  
   const onChecked = (e: any, checkedKeys: string[], onItemSelect: (n: any, c: boolean) => void) => {
     const { eventKey } = e.node;
     onItemSelect(eventKey, !isChecked(checkedKeys, eventKey as string | number));
@@ -116,6 +123,12 @@
   async function handleSubmit() {
     try {
       setModalProps({ confirmLoading: true });
+      const params = {
+        id: rowId.value,
+        menus: menu.value,
+        apis: [],
+      }
+      await updateRole(params)
       // 调用保存接口
       createMessage.success('更新成功');
       closeModal();

@@ -36,7 +36,7 @@
       </template>
     </BasicTable>
     <RoleModal @register="registerModal" @success="handleSuccess" />
-    <MenuPermissionModal :width="900" @register="registerPermissionModal" />
+    <MenuPermissionModal :width="900" @register="registerPermissionModal" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts" setup>

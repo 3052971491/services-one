@@ -4,6 +4,7 @@ import { RoleType } from '../../common/enums/common.enum'
 import { $enum } from 'ts-enum-util'
 import { CommonEntity } from '../../entities/common.entity'
 import { UserEntity } from '../user/user.entity'
+import { MenuEntity } from '../menu/menu.entity'
 
 @Entity('sys_role')
 export class RoleEntity extends CommonEntity {
@@ -27,4 +28,8 @@ export class RoleEntity extends CommonEntity {
   @ManyToMany(() => UserEntity, (user) => user.roles)
   @JoinTable()
   users: UserEntity[];
+
+  @ManyToMany(() => MenuEntity)
+  @JoinTable()
+  menus: MenuEntity[];
 }
