@@ -13,14 +13,14 @@
         >
           <template #children="{ direction, selectedKeys, onItemSelect }">
             <Tree
-              v-if="direction === 'left' && menu.length"
+              v-if="direction === 'left' && menuDataSource.length"
               block-node
               checkable
               check-strictly
               default-expand-all
               autoExpandParent
               :checked-keys="[...selectedKeys, ...menu]"
-              v-model:tree-data="menuTreeData"
+              :tree-data="menuTreeData"
               @check="
                 (_, props) => {
                   onChecked(props, [...selectedKeys, ...menu], onItemSelect);
