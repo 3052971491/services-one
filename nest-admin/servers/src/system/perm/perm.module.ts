@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common'
-import { HttpModule } from '@nestjs/axios'
 import { PermService } from './perm.service'
 import { PermController } from './perm.controller'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { PermEntity } from './perm.entity'
 
 @Module({
-  imports: [HttpModule],
-  providers: [PermService],
+  imports: [TypeOrmModule.forFeature([PermEntity])],
+  providers: [
+    PermService,
+  ],
   controllers: [PermController],
-  exports: [PermService]
-})
+exports: [PermService]})
 export class PermModule {}

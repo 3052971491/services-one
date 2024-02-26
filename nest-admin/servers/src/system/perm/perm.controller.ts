@@ -1,13 +1,12 @@
-import { Controller, Get, Req } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Post, Put, Query, Req, UseInterceptors } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-
 import { ApiResult } from '../../common/decorators/api-result.decorator'
 import { ResultData } from '../../common/utils/result'
-
 import { MenuEntity } from '../menu/menu.entity'
-
 import { PermService } from './perm.service'
-import { RouteDto } from './dto/route.dto'
+import { UpdateInterceptor } from 'src/common/guards/update.interceptor'
+import { CreatePermDto } from './dto/create-perm.dto'
+import { UpdatePermDto } from './dto/update-perm.dto'
 
 @ApiTags('权限路由')
 @ApiBearerAuth()
@@ -15,26 +14,42 @@ import { RouteDto } from './dto/route.dto'
 export class PermController {
   constructor(private readonly permService: PermService) {}
 
-  @Get('all')
-  @ApiOperation({ summary: '获取app 所有路由' })
-  @ApiResult(RouteDto)
-  async findAppAllRoutes(): Promise<ResultData> {
-    return await this.permService.findAppAllRoutes()
-  }
-
-  @Get('user')
-  @ApiOperation({ summary: '获取用户权限所有接口路由列表' })
-  @ApiResult(RouteDto, true)
-  async findUserRoutes(@Req() req): Promise<ResultData> {
-    const appRoutes = await this.permService.findUserPerms(req.user.id)
-    return ResultData.ok(appRoutes)
-  }
-
-  @Get('menu')
-  @ApiOperation({ summary: '用户权限' })
+  @Get()
+  @ApiOperation({ summary: '查询接口列表' })
   @ApiResult(MenuEntity, true)
-  async findUser(@Req() req): Promise<ResultData> {
-    const menuPerms = await this.permService.findUserMenus(req.user.id, req.user.isSystem)
-    return ResultData.ok(menuPerms)
+  async findList(@Query() dto, @Req() req): Promise<ResultData> {
+    return await this.permService.findList(dto, req.user)
   }
+
+  // @Get('one/:id/perms')
+  // @ApiOperation({ summary: '查询单个角色详情及权限菜单' })
+  // @ApiResult(RoleEntity)
+  // async findOne(@Param('id') id: string): Promise<ResultData> {
+  //   return await this.roleService.findOnePerm(id)
+  // }
+
+  @Post()
+  @UseInterceptors(UpdateInterceptor)
+  @ApiOperation({ summary: '创建角色' })
+  @ApiResult(MenuEntity)
+  async create(@Body() dto: CreatePermDto, @Req() req): Promise<ResultData> {
+    return await this.permService.create(dto, req.user)
+  }
+
+  @Put()
+  @UseInterceptors(UpdateInterceptor)
+  @ApiOperation({ summary: '更新角色' })
+  @ApiResult()
+  async update(@Body() dto: UpdatePermDto, @Req() req): Promise<ResultData> {
+    return await this.permService.update(dto, req.user)
+  }
+
+  @Delete()
+  @UseInterceptors(UpdateInterceptor)
+  @ApiOperation({ summary: '删除角色' })
+  @ApiResult()
+  async delete(@Body() body, @Req() req): Promise<ResultData> {
+    return await this.permService.delete(body, req.user)
+  }
+  
 }

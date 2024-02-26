@@ -28,3 +28,10 @@ export enum MenuType {
   /** 按钮 */
   BUTTON = 3
 }
+
+export enum PermType {
+  /** 组 */
+  GROUP,
+  /** 接口 */
+  API,
+}

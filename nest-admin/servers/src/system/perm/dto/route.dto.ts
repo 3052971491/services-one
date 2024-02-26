@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-
 import { $enum } from 'ts-enum-util'
-
 import { RouterMethods } from '../../../common/enums/routerMethod.enum'
 
 export class RouteDto {
@@ -12,6 +10,6 @@ export class RouteDto {
   @ApiProperty({ description: 'api 方法', enum: $enum(RouterMethods).getValues() })
   method: RouterMethods
   /** 路由描述 */
-  @ApiProperty({ description: 'api 描述说明', required: false })
-  desc?: string
+  @ApiProperty({ description: '备注', required: false })
+  remark?: string
 }
