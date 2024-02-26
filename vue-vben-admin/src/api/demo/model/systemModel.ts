@@ -1,4 +1,5 @@
 import { BasicPageParams, BasicFetchResult } from '@/api/model/baseModel';
+import { Key } from '@/components/Menu/src/types';
 import { StatusEnum } from '@/enums/userEnum';
 
 export type AccountParams = BasicPageParams & {
@@ -26,8 +27,8 @@ export type RoleParams = {
   name?: string;
   value?: string;
   remark?: string;
-  menus?: string[];
-  apis?: string[];
+  menus?: Key[];
+  apis?: Key[];
   [key: string]: any;
 };
 
