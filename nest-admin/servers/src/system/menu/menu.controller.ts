@@ -8,7 +8,7 @@ import { CreateMenuDto } from './dto/create-menu.dto'
 import { UpdateMenuDto } from './dto/update-menu.dto'
 import { UpdateInterceptor } from 'src/common/guards/update.interceptor'
 import { FindMenuListDto } from './dto/find-menu-list.dto'
-@ApiTags('菜单与菜单权限管理')
+@ApiTags('菜单管理')
 @ApiBearerAuth()
 @Controller('menu')
 export class MenuController {

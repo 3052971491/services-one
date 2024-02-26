@@ -15,7 +15,7 @@ export class PermController {
   constructor(private readonly permService: PermService) {}
 
   @Get()
-  @ApiOperation({ summary: '查询接口列表' })
+  @ApiOperation({ summary: '查询权限路由列表' })
   @ApiResult(MenuEntity, true)
   async findList(@Query() dto, @Req() req): Promise<ResultData> {
     return await this.permService.findList(dto, req.user)
