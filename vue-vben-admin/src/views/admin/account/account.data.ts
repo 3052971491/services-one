@@ -51,7 +51,10 @@ export const columns: BasicColumn[] = [
       return h('div', record.roles.map((item) => {
         return h(Tag, {
           bordered: false,
-          color: 'processing'
+          color: 'processing',
+          style: {
+            marginRight: '6px'
+          }
         }, {
           default: () => h('div', item.name)
         })
