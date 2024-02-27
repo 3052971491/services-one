@@ -5,6 +5,7 @@ import { $enum } from 'ts-enum-util'
 import { CommonEntity } from '../../entities/common.entity'
 import { UserEntity } from '../user/user.entity'
 import { MenuEntity } from '../menu/menu.entity'
+import { PermEntity } from '../perm/perm.entity'
 
 @Entity('sys_role')
 export class RoleEntity extends CommonEntity {
@@ -32,4 +33,8 @@ export class RoleEntity extends CommonEntity {
   @ManyToMany(() => MenuEntity)
   @JoinTable()
   menus: MenuEntity[];
+
+  @ManyToMany(() => PermEntity)
+  @JoinTable()
+  perms: PermEntity[];
 }
