@@ -1,5 +1,7 @@
 import { BasicPageParams, BasicFetchResult } from '@/api/model/baseModel';
 import { Key } from '@/components/Menu/src/types';
+import { RequestEnum } from '@/enums/httpEnum';
+import { PermType } from '@/enums/permEnum';
 import { StatusEnum } from '@/enums/userEnum';
 
 export type AccountParams = BasicPageParams & {
@@ -32,6 +34,17 @@ export type RoleParams = {
   [key: string]: any;
 };
 
+export interface PermParams {
+  id?: string;
+  type?: PermType;
+  name?: string;
+  parentId?: string;
+  method?: RequestEnum;
+  path?: string;
+  remark?: string;
+  [key: string]: any;
+}
+
 export type RolePageParams = BasicPageParams & RoleParams;
 
 export type DeptParams = {
@@ -53,6 +66,16 @@ export interface AccountListItem {
   createTime: string;
   remark: string;
   status: number;
+}
+
+export interface PermListItem {
+  id: string;
+  type: PermType;
+  name: string;
+  parentId: string;
+  method: RequestEnum;
+  path: string;
+  remark: string;
 }
 
 export interface DeptListItem {
@@ -82,6 +105,8 @@ export interface RoleListItem {
   createTime: string;
 }
 
+
+
 /**
  * @description: Request list return value
  */
@@ -94,3 +119,5 @@ export type MenuListGetResultModel = BasicFetchResult<MenuListItem>;
 export type RolePageListGetResultModel = BasicFetchResult<RoleListItem>;
 
 export type RoleListGetResultModel = RoleListItem[];
+
+export type PermListGetResultModel = PermListItem[];

@@ -8,8 +8,9 @@
   import { BasicModal, useModalInner } from '@/components/Modal';
   import { BasicForm, useForm } from '@/components/Form';
   import { formSchema } from './perm.data';
-  import { createRole, updateRole } from '@/api/demo/system';
+  import { createPerm, updatePerm } from '@/api/demo/system';
   import { useMessage } from '@/hooks/web/useMessage';
+  import { PermType } from '@/enums/permEnum';
 
   const { createMessage } = useMessage();
   
@@ -48,11 +49,21 @@
     try {
       const values = await validate();
       setModalProps({ confirmLoading: true });
+      let params = {}
+      if (values.type === PermType.GROUP) {
+        params = {
+          type: values.type,
+          name: values.name,
+          remark: values.remark
+        }
+      } else {
+        params = values;
+      }
       if (unref(isUpdate)) {
-        await updateRole({ id: rowId.value, ...values })
+        await updatePerm({ id: rowId.value, ...params })
         createMessage.success('更新成功')
       } else {
-        await createRole({ ...values })
+        await createPerm({ ...params })
         createMessage.success('新增成功')
       }
       closeModal();

@@ -11,6 +11,8 @@ import {
   RoleListGetResultModel,
   UserParams,
   ResetPasswordParams,
+  PermParams,
+  PermListGetResultModel,
 } from './model/systemModel';
 import { defHttp } from '@/utils/http/axios';
 
@@ -25,6 +27,7 @@ enum Api {
   MenuList = '/system/getMenuList',
   RolePageList = '/role/list',
   GetAllRoleList = '/role/list',
+  Perm = '/perm',
 }
 
 export const getAccountList = (params: AccountParams) =>
@@ -72,6 +75,19 @@ export const updateRole = (params?: RoleParams) =>
 /** 删除角色 */
 export const deleteRole = (id: string) =>
   defHttp.delete<AccountListGetResultModel>({ url: Api.Role, params: {
+    id
+  }
+});
+
+/** 创建接口 */
+export const createPerm = (params?: PermParams) =>
+  defHttp.post({ url: Api.Perm, params });
+/** 修改接口 */
+export const updatePerm = (params?: PermParams) =>
+  defHttp.put({ url: Api.Perm, params });
+/** 删除接口 */
+export const deletePerm = (id: string) =>
+  defHttp.delete({ url: Api.Perm, params: {
     id
   }
 });

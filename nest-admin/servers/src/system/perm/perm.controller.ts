@@ -31,7 +31,7 @@ export class PermController {
   @Post()
   @UseInterceptors(UpdateInterceptor)
   @ApiOperation({ summary: '创建角色' })
-  @ApiResult(MenuEntity)
+  @ApiResult()
   async create(@Body() dto: CreatePermDto, @Req() req): Promise<ResultData> {
     return await this.permService.create(dto, req.user)
   }

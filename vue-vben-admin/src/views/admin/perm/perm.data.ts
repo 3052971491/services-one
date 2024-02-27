@@ -74,7 +74,7 @@ export const formSchema: FormSchema[] = [
   {
     field: 'parentId',
     label: '菜单',
-    component: 'TreeSelect',
+    component: 'Select',
     required: true,
     componentProps: {
       fieldNames: {

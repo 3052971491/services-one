@@ -46,26 +46,25 @@ export class PermService {
    * @param userId
    * @returns
    */
-      async findUserPerms(userId: string): Promise<RouteDto[]> {
-        // mp.menu_id != 1 去掉 有些角色可能没有菜单， 查询的时候 为 null, 不能直接 ！null
-        const redisKey = getRedisKey(RedisKeyPrefix.USER_PERM, userId)
-        const result = await this.redisService.get(redisKey)
-        if (result) return JSON.parse(result)
-        const permsResult = await this.dataSource
-          .createQueryBuilder()
-          .select(['mp.api_url', 'mp.api_method'])
-          .from('sys_user_role', 'ur')
-          .leftJoin('sys_role_menu', 'rm', 'ur.role_id = rm.role_id')
-          .leftJoin('sys_menu_perm', 'mp', 'rm.menu_id = mp.menu_id')
-          .where('ur.user_id = :userId and mp.menu_id != 1', { userId })
-          .groupBy('mp.api_url')
-          .addGroupBy('mp.api_method')
-          .getRawMany()
-        const perms = permsResult.map((v) => ({ path: v.api_url, method: v.api_method }))
-        await this.redisService.set(redisKey, JSON.stringify(perms), ms(this.config.get<string>('jwt.expiresin')) / 1000)
-        return perms
-      }
-
+  async findUserPerms(userId: string): Promise<RouteDto[]> {
+    // mp.menu_id != 1 去掉 有些角色可能没有菜单， 查询的时候 为 null, 不能直接 ！null
+    const redisKey = getRedisKey(RedisKeyPrefix.USER_PERM, userId)
+    const result = await this.redisService.get(redisKey)
+    if (result) return JSON.parse(result)
+    const permsResult = await this.dataSource
+      .createQueryBuilder()
+      .select(['mp.api_url', 'mp.api_method'])
+      .from('sys_user_role', 'ur')
+      .leftJoin('sys_role_menu', 'rm', 'ur.role_id = rm.role_id')
+      .leftJoin('sys_menu_perm', 'mp', 'rm.menu_id = mp.menu_id')
+      .where('ur.user_id = :userId and mp.menu_id != 1', { userId })
+      .groupBy('mp.api_url')
+      .addGroupBy('mp.api_method')
+      .getRawMany()
+    const perms = permsResult.map((v) => ({ path: v.api_url, method: v.api_method }))
+    await this.redisService.set(redisKey, JSON.stringify(perms), ms(this.config.get<string>('jwt.expiresin')) / 1000)
+    return perms
+  }
   /**
    * 遍历所有 符合的 key
    *
