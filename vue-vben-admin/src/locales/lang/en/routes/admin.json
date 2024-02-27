@@ -3,6 +3,7 @@
     "moduleName": "System permission",
     "account": "Account management",
     "role": "Role management",
-    "menu": "Menu management"
+    "menu": "Menu management",
+    "perm": "Api management"
   }
 }

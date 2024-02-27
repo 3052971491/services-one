@@ -53,6 +53,15 @@ const admin: AppRouteModule = {
       },
       component: () => import('@/views/admin/menu/index.vue'),
     },
+    {
+      path: 'perm',
+      name: 'PermManagement',
+      meta: {
+        title: t('routes.admin.admin.perm'),
+        ignoreKeepAlive: true,
+      },
+      component: () => import('@/views/admin/perm/index.vue'),
+    },
     // {
     //   path: 'dept',
     //   name: 'DeptManagement',
