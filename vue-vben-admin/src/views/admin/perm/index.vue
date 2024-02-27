@@ -34,7 +34,7 @@
 </template>
 <script lang="ts" setup>
   import { BasicTable, useTable, TableAction } from '@/components/Table';
-  import { deleteRole, getRoleListByPage } from '@/api/demo/system';
+  import { deleteRole, getPermList } from '@/api/demo/system';
 
   import { useModal } from '@/components/Modal';
   import PermModal from './PermModal.vue';
@@ -48,7 +48,7 @@
   const [registerModal, { openModal }] = useModal();
   const [registerTable, { reload }] = useTable({
     title: '接口列表',
-    api: getRoleListByPage,
+    api: getPermList,
     columns,
     formConfig: {
       schemas: searchFormSchema,

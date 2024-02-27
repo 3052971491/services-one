@@ -91,3 +91,5 @@ export const deletePerm = (id: string) =>
     id
   }
 });
+export const getPermList = (params?: PermParams) =>
+  defHttp.get<PermListGetResultModel>({ url: Api.Perm, params });
