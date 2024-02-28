@@ -21,7 +21,7 @@ export class PermEntity extends CommonEntity {
   public name: string
 
   @ApiProperty({ description: '路由方法', enum: $enum(RouterMethods).getValues() })
-  @Column({ type: 'varchar', default: RouterMethods.GET, comment: '路由方法' })
+  @Column({ type: 'varchar', nullable: false, comment: '路由方法' })
   public method: RouterMethods
 
   @ApiProperty({ description: 'api 路径' })

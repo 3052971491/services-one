@@ -41,6 +41,7 @@
 
   import { columns, searchFormSchema } from './perm.data';
   import { useMessage } from '@/hooks/web/useMessage';
+import { PermType } from '@/enums/permEnum';
   
 
   defineOptions({ name: 'PermManagement' });
@@ -57,7 +58,7 @@
     useSearchForm: true,
     showTableSetting: true,
     bordered: true,
-    showIndexColumn: true,
+    showIndexColumn: false,
     handleSearchInfoFn(info) {
       const { createDate, ...params } = info;
       return {
@@ -72,6 +73,14 @@
       dataIndex: 'action',
       fixed: 'right',
     },
+    afterFetch(result) {
+      return result.map((item) => {
+        if (item.type === PermType.GROUP) {
+          item.children = [];
+        }
+        return item;
+      })
+    }
   });
 
   const { createMessage } = useMessage()

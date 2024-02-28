@@ -1,17 +1,26 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { RedisService } from '../../common/libs/redis/redis.service'
-import { DataSource } from 'typeorm'
+import { Between, DataSource, EntityManager, Like, Repository } from 'typeorm'
 import { RouteDto } from './dto/route.dto'
 import { getRedisKey } from 'src/common/utils/utils'
 import { RedisKeyPrefix } from 'src/common/enums/redis-key-prefix.enum'
 import ms from 'ms'
 import { UserEntity } from '../user/user.entity'
 import { ResultData } from 'src/common/utils/result'
+import { PermType } from 'src/common/enums/common.enum'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { PermEntity } from './perm.entity'
+import { AppHttpCode } from 'src/common/enums/code.enum'
+import { plainToInstance } from 'class-transformer'
 
 @Injectable()
 export class PermService {
   constructor(
+    @InjectRepository(PermEntity)
+    private readonly permRepo: Repository<PermEntity>,
+    @InjectEntityManager()
+    private readonly permManager: EntityManager,
     private readonly redisService: RedisService,
     private readonly config: ConfigService,
     private dataSource: DataSource,
@@ -101,17 +110,38 @@ export class PermService {
     }
   }
 
-  findList(dto, user: UserEntity) {
+  async findList(dto, user: UserEntity) {
+    const { name } = dto
+    const where: any = {
+      ...(name ? { name: Like(`%${name}%`) } : null),
+      isDeleted: false,
+    }
+    if (dto.startDate && dto.endDate) {
+      where.createdAt = Between(dto.startDate, dto.endDate)
+    }
+    const menuList = await this.permRepo.find({ where, order: { createdBy: 'DESC' } })
+    return ResultData.ok(menuList)
+  }
+
+  async create(dto, user: UserEntity) {
+    if (dto.type != PermType.GROUP) {
+      // 查询当前菜单是否存在
+      const parentPerm = await this.permRepo.findOne({ where: { id: dto.parentId } })
+      if (!parentPerm) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '当前菜单不存在，请调整后重新添加')
+    }
+    const perm = await this.permManager.transaction(async (transactionalEntityManager) => {
+      const permResult = await transactionalEntityManager.save<PermEntity>(plainToInstance(PermEntity, dto))
+      return permResult
+    })
+    if (!perm) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '接口创建失败，请稍后重试')
     return ResultData.ok()
   }
 
-  create(dto, user: UserEntity) {
+  async update(dto, user: UserEntity) {
     return ResultData.ok()
   }
-  update(dto, user: UserEntity) {
-    return ResultData.ok()
-  }
-  delete(dto, user: UserEntity) {
+  
+  async delete(dto, user: UserEntity) {
     return ResultData.ok()
   }
 }

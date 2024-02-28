@@ -1,6 +1,4 @@
 import { BasicColumn, FormSchema } from '@/components/Table';
-import { h } from 'vue';
-import { Tag } from 'ant-design-vue';
 import { RequestEnum } from '@/enums/httpEnum';
 import { PermType } from '@/enums/permEnum';
 
@@ -9,23 +7,6 @@ export const columns: BasicColumn[] = [
     title: '名称',
     dataIndex: 'name',
     width: 240,
-    customRender: ({ record }) => {
-      return h(
-        Tag,
-        {
-          bordered: false,
-          color: record.name === RequestEnum.POST ? 'success' : record.name === RequestEnum.PUT ? 'warning' : record.name === RequestEnum.DELETE ? 'error' : 'processing',
-        },
-        {
-          default: () => h('span', record.name),
-        },
-      )
-    }
-  },
-  {
-    title: '方法',
-    dataIndex: 'method',
-    width: 60,
   },
   {
     title: 'API 路径',
@@ -46,6 +27,12 @@ export const columns: BasicColumn[] = [
 
 export const searchFormSchema: FormSchema[] = [
   {
+    field: 'name',
+    label: '名称',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
     field: 'createDate',
     label: '创建时间',
     component: 'RangePicker',
@@ -63,11 +50,16 @@ export const formSchema: FormSchema[] = [
     label: '类型',
     component: 'RadioButtonGroup',
     defaultValue: PermType.GROUP,
-    componentProps: {
-      options: [
-        { label: '菜单', value: PermType.GROUP },
-        { label: '接口', value: PermType.API },
-      ],
+    componentProps: ({ schema, tableAction, formActionType, formModel }) => {
+      return {
+        onChange: () => {
+          formActionType.resetFields();
+        },
+        options: [
+          { label: '菜单', value: PermType.GROUP },
+          { label: '接口', value: PermType.API },
+        ],
+      };
     },
     colProps: { lg: 24, md: 24 },
   },
@@ -105,8 +97,8 @@ export const formSchema: FormSchema[] = [
       options: Object.values(RequestEnum).map((item) => {
         return {
           label: item,
-          value: item
-        }
+          value: item,
+        };
       }),
       getPopupContainer: () => document.body,
     },

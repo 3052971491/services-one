@@ -15,6 +15,7 @@
   const { createMessage } = useMessage();
   
   defineOptions({ name: 'PermModal' });
+  
   const emit = defineEmits(['success', 'register']);
 
   const isUpdate = ref(true);
