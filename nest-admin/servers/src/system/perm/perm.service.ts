@@ -13,6 +13,7 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { PermEntity } from './perm.entity'
 import { AppHttpCode } from 'src/common/enums/code.enum'
 import { plainToInstance } from 'class-transformer'
+import { FindListByTypeDto } from './dto/find-perm-list.dto'
 
 @Injectable()
 export class PermService {
@@ -111,8 +112,9 @@ export class PermService {
   }
 
   async findList(dto, user: UserEntity) {
-    const { name } = dto
+    const { name, type } = dto
     const where: any = {
+      ...(type ? { type } : null),
       ...(name ? { name: Like(`%${name}%`) } : null),
       isDeleted: false,
     }

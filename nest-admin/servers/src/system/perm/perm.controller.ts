@@ -7,6 +7,7 @@ import { PermService } from './perm.service'
 import { UpdateInterceptor } from 'src/common/guards/update.interceptor'
 import { CreatePermDto } from './dto/create-perm.dto'
 import { UpdatePermDto } from './dto/update-perm.dto'
+import { FindListByTypeDto } from './dto/find-perm-list.dto'
 
 @ApiTags('权限路由')
 @ApiBearerAuth()
@@ -17,7 +18,7 @@ export class PermController {
   @Get()
   @ApiOperation({ summary: '查询权限路由列表' })
   @ApiResult(MenuEntity, true)
-  async findList(@Query() dto, @Req() req): Promise<ResultData> {
+  async findList(@Query() dto: FindListByTypeDto, @Req() req): Promise<ResultData> {
     return await this.permService.findList(dto, req.user)
   }
 

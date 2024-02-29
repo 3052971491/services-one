@@ -8,7 +8,7 @@
   import { BasicModal, useModalInner } from '@/components/Modal';
   import { BasicForm, useForm } from '@/components/Form';
   import { formSchema } from './perm.data';
-  import { createPerm, updatePerm } from '@/api/demo/system';
+  import { createPerm, updatePerm, getPermList } from '@/api/demo/system';
   import { useMessage } from '@/hooks/web/useMessage';
   import { PermType } from '@/enums/permEnum';
 
@@ -21,7 +21,7 @@
   const isUpdate = ref(true);
   const rowId = ref('');
 
-  const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
+  const [registerForm, { setFieldsValue, resetFields, validate, updateSchema }] = useForm({
     labelWidth: 100,
     baseColProps: { span: 24 },
     schemas: formSchema,
@@ -36,6 +36,9 @@
     setModalProps({ confirmLoading: false });
     isUpdate.value = !!data?.isUpdate;
 
+    const options = await getPermList({type: PermType.GROUP});
+    updateSchema({ field: 'parentId', componentProps: { options } });
+    
     if (unref(isUpdate)) {
       rowId.value = data.record.id;
       setFieldsValue({
