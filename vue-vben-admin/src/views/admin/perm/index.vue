@@ -41,7 +41,7 @@
 
   import { columns, searchFormSchema } from './perm.data';
   import { useMessage } from '@/hooks/web/useMessage';
-import { PermType } from '@/enums/permEnum';
+  import { PermType } from '@/enums/permEnum';
   
 
   defineOptions({ name: 'PermManagement' });
