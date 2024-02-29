@@ -1,12 +1,41 @@
 import { BasicColumn, FormSchema } from '@/components/Table';
 import { RequestEnum } from '@/enums/httpEnum';
 import { PermType } from '@/enums/permEnum';
+import { h } from 'vue';
+import { Tag } from 'ant-design-vue';
 
 export const columns: BasicColumn[] = [
   {
     title: '名称',
     dataIndex: 'name',
-    width: 240,
+    width: 300,
+  },
+  {
+    title: '路由方法',
+    dataIndex: 'method',
+    width: 80,
+    customRender: ({ record }) => {
+      if (record.type === PermType.GROUP) return record.method;
+      return h('span', {}, [
+        h(
+          Tag,
+          {
+            bordered: false,
+            color:
+              record.method === RequestEnum.POST
+                ? 'success'
+                : record.method === RequestEnum.PUT
+                  ? 'warning'
+                  : record.method === RequestEnum.DELETE
+                    ? 'error'
+                    : 'processing',
+          },
+          {
+            default: () => h('span', record.method),
+          },
+        ),
+      ]);
+    },
   },
   {
     title: 'API 路径',
@@ -52,9 +81,6 @@ export const formSchema: FormSchema[] = [
     defaultValue: PermType.GROUP,
     componentProps: ({ schema, tableAction, formActionType, formModel }) => {
       return {
-        onChange: () => {
-          formActionType.resetFields();
-        },
         options: [
           { label: '菜单', value: PermType.GROUP },
           { label: '接口', value: PermType.API },

@@ -42,11 +42,11 @@
   import { columns, searchFormSchema } from './perm.data';
   import { useMessage } from '@/hooks/web/useMessage';
   import { PermType } from '@/enums/permEnum';
-  
 
   defineOptions({ name: 'PermManagement' });
 
   const [registerModal, { openModal }] = useModal();
+
   const [registerTable, { reload }] = useTable({
     title: '接口列表',
     api: getPermList,
@@ -74,12 +74,12 @@
       fixed: 'right',
     },
     afterFetch(result) {
-      return result.map((item) => {
+      return result.filter((item) => item.type === PermType.GROUP).map((item) => {
         if (item.type === PermType.GROUP) {
-          item.children = [];
+          item.children = result.filter((i) => item.id === i.parentId);
         }
         return item;
-      })
+      });
     }
   });
 

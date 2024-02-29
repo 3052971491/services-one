@@ -38,12 +38,9 @@
 
     const options = await getPermList({type: PermType.GROUP});
     updateSchema({ field: 'parentId', componentProps: { options } });
-    
     if (unref(isUpdate)) {
       rowId.value = data.record.id;
-      setFieldsValue({
-        ...data.record,
-      });
+      setFieldsValue(data.record);
     }
   });
 

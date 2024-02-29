@@ -161,6 +161,7 @@ export class PermService {
         ...params,
         isDeleted: true,
       })};
+      await transactionalEntityManager.update(PermEntity, { parentId: id }, updatedEntity);
       return await transactionalEntityManager.update(PermEntity, dto.id, updatedEntity);
     })
     if (!affected) ResultData.fail(AppHttpCode.SERVICE_ERROR, '接口删除失败，请稍后重试')
