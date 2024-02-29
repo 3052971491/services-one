@@ -31,26 +31,26 @@ export class PermController {
 
   @Post()
   @UseInterceptors(UpdateInterceptor)
-  @ApiOperation({ summary: '创建角色' })
+  @ApiOperation({ summary: '创建接口' })
   @ApiResult()
-  async create(@Body() dto: CreatePermDto, @Req() req): Promise<ResultData> {
-    return await this.permService.create(dto, req.user)
+  async create(@Body() dto: CreatePermDto): Promise<ResultData> {
+    return await this.permService.create(dto)
   }
 
   @Put()
   @UseInterceptors(UpdateInterceptor)
-  @ApiOperation({ summary: '更新角色' })
+  @ApiOperation({ summary: '更新接口' })
   @ApiResult()
-  async update(@Body() dto: UpdatePermDto, @Req() req): Promise<ResultData> {
-    return await this.permService.update(dto, req.user)
+  async update(@Body() dto: UpdatePermDto): Promise<ResultData> {
+    return await this.permService.update(dto)
   }
 
   @Delete()
   @UseInterceptors(UpdateInterceptor)
-  @ApiOperation({ summary: '删除角色' })
+  @ApiOperation({ summary: '删除接口' })
   @ApiResult()
-  async delete(@Body() body, @Req() req): Promise<ResultData> {
-    return await this.permService.delete(body, req.user)
+  async delete(@Body() body): Promise<ResultData> {
+    return await this.permService.delete(body)
   }
   
 }

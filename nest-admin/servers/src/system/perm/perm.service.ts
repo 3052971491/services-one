@@ -13,7 +13,6 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { PermEntity } from './perm.entity'
 import { AppHttpCode } from 'src/common/enums/code.enum'
 import { plainToInstance } from 'class-transformer'
-import { FindListByTypeDto } from './dto/find-perm-list.dto'
 
 @Injectable()
 export class PermService {
@@ -125,10 +124,9 @@ export class PermService {
     return ResultData.ok(menuList)
   }
 
-  async create(dto, user: UserEntity) {
+  async create(dto) {
     if (dto.type != PermType.GROUP) {
-      // 查询当前菜单是否存在
-      const parentPerm = await this.permRepo.findOne({ where: { id: dto.parentId } })
+      const parentPerm = await this.permRepo.findOne({ where: { id: dto.parentId, isDeleted: false, } })
       if (!parentPerm) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '当前菜单不存在，请调整后重新添加')
     }
     const perm = await this.permManager.transaction(async (transactionalEntityManager) => {
@@ -139,11 +137,34 @@ export class PermService {
     return ResultData.ok()
   }
 
-  async update(dto, user: UserEntity) {
+  async update(dto) {
+    const { id, ...params } = dto;
+    const existing = await this.permRepo.findOne({ where: { id, isDeleted: false, } })
+    if (!existing) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '当前接口不存在或已删除')
+    const { affected } = await this.permManager.transaction(async (transactionalEntityManager) => {
+      const updatedEntity = { ...plainToInstance(PermEntity, {
+        ...params,
+      })};
+      return await transactionalEntityManager.update(PermEntity, dto.id, updatedEntity);
+    })
+    if (!affected) ResultData.fail(AppHttpCode.SERVICE_ERROR, '接口更新失败，请稍后重试')
+    await this.clearUserInfoCache();
     return ResultData.ok()
   }
   
-  async delete(dto, user: UserEntity) {
+  async delete(dto) {
+    const { id, ...params } = dto;
+    const existing = await this.permRepo.findOne({ where: { id, isDeleted: false, } })
+    if (!existing) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '当前接口不存在或已删除')
+    const { affected } = await this.permManager.transaction(async (transactionalEntityManager) => {
+      const updatedEntity = { ...plainToInstance(PermEntity, {
+        ...params,
+        isDeleted: true,
+      })};
+      return await transactionalEntityManager.update(PermEntity, dto.id, updatedEntity);
+    })
+    if (!affected) ResultData.fail(AppHttpCode.SERVICE_ERROR, '接口删除失败，请稍后重试')
+    await this.clearUserInfoCache();
     return ResultData.ok()
   }
 }

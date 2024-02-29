@@ -34,7 +34,7 @@
 </template>
 <script lang="ts" setup>
   import { BasicTable, useTable, TableAction } from '@/components/Table';
-  import { deleteRole, getPermList } from '@/api/demo/system';
+  import { deletePerm, getPermList } from '@/api/demo/system';
 
   import { useModal } from '@/components/Modal';
   import PermModal from './PermModal.vue';
@@ -99,7 +99,7 @@ import { PermType } from '@/enums/permEnum';
   }
 
   async function handleDelete(record: Recordable) {
-    await deleteRole(record.id)
+    await deletePerm(record.id)
     createMessage.success('删除成功')
     reload();
   }
