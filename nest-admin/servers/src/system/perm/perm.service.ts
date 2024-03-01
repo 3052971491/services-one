@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { RedisService } from '../../common/libs/redis/redis.service'
-import { Between, DataSource, EntityManager, Like, Repository } from 'typeorm'
+import { Between, DataSource, EntityManager, Like, Not, Repository } from 'typeorm'
 import { RouteDto } from './dto/route.dto'
 import { getRedisKey } from 'src/common/utils/utils'
 import { RedisKeyPrefix } from 'src/common/enums/redis-key-prefix.enum'
@@ -126,9 +126,18 @@ export class PermService {
 
   async create(dto) {
     if (dto.type != PermType.GROUP) {
-      const parentPerm = await this.permRepo.findOne({ where: { id: dto.parentId, isDeleted: false, } })
-      if (!parentPerm) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '当前菜单不存在，请调整后重新添加')
+      const parentPerm = await this.permRepo.findOne({ where: { id: dto.parentId, isDeleted: false } })
+      if (!parentPerm) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '当前接口不存在，请调整后重新添加')
+      if (
+        dto.method &&
+        dto.path &&
+        (await this.permRepo.findOne({
+          where: { method: dto.method, path: dto.path, isDeleted: false },
+        }))
+      )
+        return ResultData.fail(AppHttpCode.SERVICE_ERROR, '接口已存在，请调整后重新提交！')
     }
+
     const perm = await this.permManager.transaction(async (transactionalEntityManager) => {
       const permResult = await transactionalEntityManager.save<PermEntity>(plainToInstance(PermEntity, dto))
       return permResult
@@ -138,34 +147,49 @@ export class PermService {
   }
 
   async update(dto) {
-    const { id, ...params } = dto;
-    const existing = await this.permRepo.findOne({ where: { id, isDeleted: false, } })
+    const { id, ...params } = dto
+    const existing = await this.permRepo.findOne({ where: { id, isDeleted: false } })
     if (!existing) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '当前接口不存在或已删除')
+    if (dto.type != PermType.GROUP) {
+      if (
+        dto.method &&
+        dto.path &&
+        (await this.permRepo.findOne({
+          where: { id: Not(dto.id), method: dto.method, path: dto.path, isDeleted: false },
+        }))
+      )
+        return ResultData.fail(AppHttpCode.SERVICE_ERROR, '接口已存在，请调整后重新提交！')
+    }
+
     const { affected } = await this.permManager.transaction(async (transactionalEntityManager) => {
-      const updatedEntity = { ...plainToInstance(PermEntity, {
-        ...params,
-      })};
-      return await transactionalEntityManager.update(PermEntity, dto.id, updatedEntity);
+      const updatedEntity = {
+        ...plainToInstance(PermEntity, {
+          ...params,
+        }),
+      }
+      return await transactionalEntityManager.update(PermEntity, dto.id, updatedEntity)
     })
     if (!affected) ResultData.fail(AppHttpCode.SERVICE_ERROR, '接口更新失败，请稍后重试')
-    await this.clearUserInfoCache();
+    await this.clearUserInfoCache()
     return ResultData.ok()
   }
-  
+
   async delete(dto) {
-    const { id, ...params } = dto;
-    const existing = await this.permRepo.findOne({ where: { id, isDeleted: false, } })
+    const { id, ...params } = dto
+    const existing = await this.permRepo.findOne({ where: { id, isDeleted: false } })
     if (!existing) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '当前接口不存在或已删除')
     const { affected } = await this.permManager.transaction(async (transactionalEntityManager) => {
-      const updatedEntity = { ...plainToInstance(PermEntity, {
-        ...params,
-        isDeleted: true,
-      })};
-      await transactionalEntityManager.update(PermEntity, { parentId: id }, updatedEntity);
-      return await transactionalEntityManager.update(PermEntity, dto.id, updatedEntity);
+      const updatedEntity = {
+        ...plainToInstance(PermEntity, {
+          ...params,
+          isDeleted: true,
+        }),
+      }
+      await transactionalEntityManager.update(PermEntity, { parentId: id }, updatedEntity)
+      return await transactionalEntityManager.update(PermEntity, dto.id, updatedEntity)
     })
     if (!affected) ResultData.fail(AppHttpCode.SERVICE_ERROR, '接口删除失败，请稍后重试')
-    await this.clearUserInfoCache();
+    await this.clearUserInfoCache()
     return ResultData.ok()
   }
 }

@@ -13,9 +13,9 @@
   import { PermType } from '@/enums/permEnum';
 
   const { createMessage } = useMessage();
-  
+
   defineOptions({ name: 'PermModal' });
-  
+
   const emit = defineEmits(['success', 'register']);
 
   const isUpdate = ref(true);
@@ -36,7 +36,7 @@
     setModalProps({ confirmLoading: false });
     isUpdate.value = !!data?.isUpdate;
 
-    const options = await getPermList({type: PermType.GROUP});
+    const options = await getPermList({ type: PermType.GROUP });
     updateSchema({ field: 'parentId', componentProps: { options } });
     if (unref(isUpdate)) {
       rowId.value = data.record.id;
@@ -50,22 +50,23 @@
     try {
       const values = await validate();
       setModalProps({ confirmLoading: true });
-      let params = {}
-      if (values.type === PermType.GROUP) {
-        params = {
-          type: values.type,
-          name: values.name,
-          remark: values.remark
-        }
-      } else {
-        params = values;
-      }
+      let params =
+        values.type === PermType.GROUP
+          ? {
+              type: values.type,
+              name: values.name,
+              remark: values.remark,
+              parentId: null,
+              path: null,
+              method: null,
+            }
+          : values;
       if (unref(isUpdate)) {
-        await updatePerm({ id: rowId.value, ...params })
-        createMessage.success('更新成功')
+        await updatePerm({ id: rowId.value, ...params });
+        createMessage.success('更新成功');
       } else {
-        await createPerm({ ...params })
-        createMessage.success('新增成功')
+        await createPerm({ ...params });
+        createMessage.success('新增成功');
       }
       closeModal();
       emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: rowId.value } });

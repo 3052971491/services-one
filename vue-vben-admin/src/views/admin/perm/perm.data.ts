@@ -40,6 +40,7 @@ export const columns: BasicColumn[] = [
   {
     title: 'API 路径',
     dataIndex: 'path',
+    minWidth: 300,
   },
   {
     title: '备注',
@@ -118,7 +119,6 @@ export const formSchema: FormSchema[] = [
     label: '方法',
     component: 'RadioButtonGroup',
     required: true,
-    defaultValue: RequestEnum.GET,
     componentProps: {
       options: Object.values(RequestEnum).map((item) => {
         return {

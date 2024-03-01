@@ -21,11 +21,11 @@ export class PermEntity extends CommonEntity {
   public name: string
 
   @ApiProperty({ description: '路由方法', enum: $enum(RouterMethods).getValues() })
-  @Column({ type: 'varchar', nullable: false, comment: '路由方法' })
+  @Column({ type: 'varchar', nullable: true, comment: '路由方法' })
   public method: RouterMethods
 
   @ApiProperty({ description: 'api 路径' })
-  @Column({ type: 'varchar', length: 100, default: '', comment: 'api 路径' })
+  @Column({ type: 'varchar', length: 100, nullable: true, comment: 'api 路径' })
   path: string
 
   @ApiProperty({ description: '备注' })
