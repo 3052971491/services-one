@@ -32,7 +32,7 @@ export class PermEntity extends CommonEntity {
   @Column({ type: 'varchar', length: 100, default: '', comment: '备注' })
   remark: string
 
-  @ManyToMany(() => RoleEntity, (role) => role.perms)
+  @ManyToMany(() => RoleEntity, (role) => role.id)
   @JoinTable()
-  roles: RoleEntity[];
+  roles: RoleEntity[]
 }

@@ -45,7 +45,7 @@
 
   import { useModal } from '@/components/Modal';
   import RoleModal from './RoleModal.vue';
-  import MenuPermissionModal from './MenuPermissionModal.vue';
+  import MenuPermissionModal from './PermissionModal.vue';
 
   import { columns, searchFormSchema } from './role.data';
   import { useMessage } from '@/hooks/web/useMessage';

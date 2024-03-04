@@ -43,7 +43,7 @@ export class MenuEntity extends CommonEntity {
   @Column({ type: 'varchar', length: 256, nullable: true, comment: '组件路径' })
   public componentPath: string
 
-  @ManyToMany(() => RoleEntity, (role) => role.menus)
+  @ManyToMany(() => RoleEntity, (role) => role.id)
   @JoinTable()
-  roles: RoleEntity[];
+  roles: RoleEntity[]
 }

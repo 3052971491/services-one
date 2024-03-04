@@ -15,11 +15,28 @@
             title: 'name',
           }"
           :height="400"
-          @check="onChecked"
+          @check="onChecked($event, true)"
         >
         </Tree>
       </tab-pane>
-      <tab-pane key="2" tab="接口权限" force-render></tab-pane>
+      <tab-pane key="2" tab="接口权限" force-render>
+        <Tree
+          v-if="apiTreeData.length"
+          v-model:checkedKeys="api"
+          block-node
+          checkable
+          checkStrictly
+          default-expand-all
+          :tree-data="apiTreeData"
+          :field-names="{
+            key: 'id',
+            title: 'name',
+          }"
+          :height="400"
+          @check="onChecked($event, false)"
+        >
+        </Tree>
+      </tab-pane>
     </Tabs>
   </BasicModal>
 </template>
@@ -32,11 +49,11 @@
   import { useMessage } from '@/hooks/web/useMessage';
   import { getAllList } from '@/api/admin/menu';
   import { listToTree } from '@/utils/helper/treeHelper';
-  import { updateRole } from '@/api/demo/system';
+  import { getPermList, updateRole } from '@/api/demo/system';
 
   const { createMessage } = useMessage();
 
-  defineOptions({ name: 'MenuPermissionModal' });
+  defineOptions({ name: 'PermissionModal' });
 
   const emit = defineEmits(['success', 'register']);
   const rowId = ref('');
@@ -46,12 +63,16 @@
   const menu = ref<Key[]>([]);
   const menuTreeData = ref([]);
 
+  const api = ref<Key[]>([]);
+  const apiTreeData = ref([]);
+
   const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
     setModalProps({ confirmLoading: true });
-    const { menus = [] } = data.record;
+    const { menus = [], apis = [] } = data.record;
     rowId.value = data.record.id;
     // 获取所有的菜单列表
     let menuList = await getAllList();
+    let apiList = await getPermList();
     menuList = listToTree(
       menuList,
       {
@@ -59,21 +80,41 @@
         pid: 'parentId',
       },
     );
+    apiList = listToTree(
+      apiList,
+      {
+        id: 'id',
+        pid: 'parentId',
+      },
+    );
     // 初始化数据
     menu.value = menus.map((item) => item.id);
-    menuTreeData.value = handleTreeData(menuList, menu.value);
+    api.value = apis.map((item) => item.id);
+    menuTreeData.value = handleTreeData('menu', menuList, menu.value);
+    apiTreeData.value = handleTreeData('api', apiList, api.value);
+
     setModalProps({ confirmLoading: false });
   });
-  function handleTreeData(treeNodes: TransferProps['dataSource'] = [], targetKeys: Key[] = []) {
+
+  function handleTreeData(type: string, treeNodes: TransferProps['dataSource'] = [], targetKeys: Key[] = []) {
     return treeNodes.map(({ children, ...props }) => ({
       ...props,
-      // disabled: targetKeys.includes(props.key as string),
-      children: handleTreeData(children ?? [], targetKeys),
+      disabled: type === 'api', // 只有是接口权限, 且是第一层节点时禁用
+      children: handleTreeData('', children ?? [], targetKeys),
     }));
   }
 
-  const onChecked = (checkedKeys: any): void => {
-    menu.value = checkedKeys.checked as  Key[];
+  /**
+   * 节点选中回调
+   * @param flag 是否是菜单权限
+   * @param checkedKeys 选中节点
+   */
+  const onChecked = (checkedKeys: any, flag: boolean, ): void => {
+    if (flag) {
+      menu.value = checkedKeys.checked as  Key[];
+    } else {
+      api.value = checkedKeys.checked as  Key[];
+    }
   };
 
   async function handleSubmit() {
@@ -82,7 +123,7 @@
       const params = {
         id: rowId.value,
         menus: menu.value,
-        apis: [],
+        apis: api.value,
       };
       await updateRole(params);
       // 调用保存接口

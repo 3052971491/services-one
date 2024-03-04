@@ -22,13 +22,6 @@ export class PermController {
     return await this.permService.findList(dto, req.user)
   }
 
-  // @Get('one/:id/perms')
-  // @ApiOperation({ summary: '查询单个角色详情及权限菜单' })
-  // @ApiResult(RoleEntity)
-  // async findOne(@Param('id') id: string): Promise<ResultData> {
-  //   return await this.roleService.findOnePerm(id)
-  // }
-
   @Post()
   @UseInterceptors(UpdateInterceptor)
   @ApiOperation({ summary: '创建接口' })

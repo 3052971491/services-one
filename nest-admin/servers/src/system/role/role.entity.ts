@@ -36,5 +36,5 @@ export class RoleEntity extends CommonEntity {
 
   @ManyToMany(() => PermEntity)
   @JoinTable()
-  perms: PermEntity[];
+  apis: PermEntity[];
 }
