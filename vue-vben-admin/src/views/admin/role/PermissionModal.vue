@@ -67,6 +67,7 @@
   const apiTreeData = ref([]);
 
   const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
+    activeKey.value = '1';
     setModalProps({ confirmLoading: true });
     const { menus = [], apis = [] } = data.record;
     rowId.value = data.record.id;
