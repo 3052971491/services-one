@@ -32,7 +32,8 @@ export class RolesGuard implements CanActivate {
       // 请求方法类型相同
       if (req.method.toUpperCase() === route.method.toUpperCase()) {
         // 对比 url
-        return !!pathToRegexp(route.path).exec(req.url)
+        const reqUrl = req.url.split('?')[0]
+        return !!pathToRegexp(route.path).exec(reqUrl)
       }
       return false
     })

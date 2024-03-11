@@ -57,22 +57,32 @@ export class PermService {
    */
   async findUserPerms(userId: string): Promise<RouteDto[]> {
     // mp.menu_id != 1 去掉 有些角色可能没有菜单， 查询的时候 为 null, 不能直接 ！null
-    const redisKey = getRedisKey(RedisKeyPrefix.USER_PERM, userId)
-    const result = await this.redisService.get(redisKey)
-    if (result) return JSON.parse(result)
-    const permsResult = await this.dataSource
-      .createQueryBuilder()
-      .select(['mp.api_url', 'mp.api_method'])
-      .from('sys_user_role', 'ur')
-      .leftJoin('sys_role_menu', 'rm', 'ur.role_id = rm.role_id')
-      .leftJoin('sys_menu_perm', 'mp', 'rm.menu_id = mp.menu_id')
-      .where('ur.user_id = :userId and mp.menu_id != 1', { userId })
-      .groupBy('mp.api_url')
-      .addGroupBy('mp.api_method')
-      .getRawMany()
-    const perms = permsResult.map((v) => ({ path: v.api_url, method: v.api_method }))
-    await this.redisService.set(redisKey, JSON.stringify(perms), ms(this.config.get<string>('jwt.expiresin')) / 1000)
-    return perms
+    // const redisKey = getRedisKey(RedisKeyPrefix.USER_PERM, userId)
+    // const result = await this.redisService.get(redisKey)
+    // if (result) return JSON.parse(result)
+
+    // 表的关系: sys_user 多对多 sys_role, sys_role 多对多 sys_perm
+
+    // 所有查询需要是未删除状态下的数据: isDeleted: false
+
+    // 通过用户ID查询角色, 角色可能是多个
+
+    // 通过角色查询绑定的接口权限
+
+    // 去重，多个角色绑定一个接口查询重复，所以使用 group by 去掉重复的接口
+
+    // 最终只查询接口字段, path, method
+    const userRolesAndPerms = await this.dataSource.createQueryBuilder()
+      .from('sys_user', 'user')
+      .leftJoin('user.roles', 'role')
+      .leftJoin('role.apis', 'perm')
+      .where('user.id = :userId', { userId })
+      .andWhere('perm.isDeleted = :isDeleted', { isDeleted: false })
+      .select('DISTINCT perm.path, perm.method')
+      .getRawMany();
+
+    // await this.redisService.set(redisKey, JSON.stringify(userRolesAndPerms), ms(this.config.get<string>('jwt.expiresin')) / 1000)
+    return userRolesAndPerms
   }
   /**
    * 遍历所有 符合的 key

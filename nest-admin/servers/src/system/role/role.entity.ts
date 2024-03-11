@@ -30,11 +30,11 @@ export class RoleEntity extends CommonEntity {
   @JoinTable()
   users: UserEntity[];
 
-  @ManyToMany(() => MenuEntity)
+  @ManyToMany(() => MenuEntity, menu => menu.roles)
   @JoinTable()
   menus: MenuEntity[];
 
-  @ManyToMany(() => PermEntity)
+  @ManyToMany(() => PermEntity, perm => perm.roles)
   @JoinTable()
   apis: PermEntity[];
 }
