@@ -9,8 +9,8 @@ import { filter, listToTree } from '@/utils/helper/treeHelper';
 import { usePermissionStore } from '@/store/modules/permission';
 import { flatMultiLevelRoutes, transformObjToRoute } from '@/router/helper/routeHelper';
 import { toRaw } from 'vue';
-import { getAllList } from '@/api/admin/menu';
 import { MenuListItem, MenuType } from '@/api/admin/model/menu';
+import { findMenuByUserId } from '@/api/admin/user';
 
 /**
  * 生成系统路由
@@ -98,7 +98,7 @@ async function getFrontRoutes() {
 }
 
 async function getBackRoutes() {
-  let result = await getAllList();
+  let result = await findMenuByUserId();
   let routes: AppRouteRecordRaw[] = [];
 
   routes = transformToRoute(result);

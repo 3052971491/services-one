@@ -12,7 +12,7 @@ export class MenuEntity extends CommonEntity {
   public type: MenuType
 
   @ApiProperty({ description: '父级菜单id' })
-  @Column({ name: 'parent_id', nullable: true, type: 'bigint' })
+  @Column({ name: 'parentId', nullable: true, type: 'bigint' })
   public parentId: string
 
   @ApiProperty({ description: '菜单名称' })

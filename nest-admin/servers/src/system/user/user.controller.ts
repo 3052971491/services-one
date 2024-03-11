@@ -111,4 +111,11 @@ export class UserController {
   async delete(@Body() body, @Req() req): Promise<ResultData> {
     return await this.userService.delete(body, req)
   }
+
+  @Get('/menus')
+  @ApiOperation({ summary: '根据用户Id获取所有菜单' })
+  @ApiResult(UserEntity, true)
+  async findMenuForRole(@Req() req): Promise<ResultData> {
+    return await this.userService.findMenuByUserId(req.user)
+  }
 }

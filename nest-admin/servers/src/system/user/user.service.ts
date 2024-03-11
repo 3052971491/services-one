@@ -24,6 +24,7 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { CreateOrUpdateUserRolesDto } from './dto/create-user-roles.dto'
 import { CreateTokenDto } from './dto/create-token.dto'
 import { RoleEntity } from 'src/system/role/role.entity'
+import { MenuService } from '../menu/menu.service'
 
 @Injectable()
 export class UserService {
@@ -34,11 +35,11 @@ export class UserService {
     private readonly userRepo: Repository<UserEntity>,
     @InjectEntityManager()
     private readonly userManager: EntityManager,
-
     private readonly config: ConfigService,
     private readonly redisService: RedisService,
     private readonly jwtService: JwtService,
     private readonly permService: PermService,
+    private readonly menuervice: MenuService,
   ) {}
 
   async findOneById(id: string): Promise<UserEntity> {
@@ -445,5 +446,21 @@ export class UserService {
     // 删除角色后，角色不存在 影响用户权限，和用户绑定角色，所以需要全删
     await this.permService.clearUserInfoCache()
     return ResultData.ok()
+  }
+
+  async findMenuByUserId(user: UserEntity) {
+    const { id, isSystem } = user
+    // 如果是超管, 则查询全部
+    if (isSystem === UserType.SUPER_ADMIN) {
+      return this.menuervice.findAllMenu({})
+    }
+    const result = await this.userRepo.createQueryBuilder('user')
+      .leftJoin('user.roles', 'role')
+      .leftJoin('role.menus', 'menu')
+      .where('user.id = :id', { id })
+      .andWhere('menu.isDeleted = :isDeleted', { isDeleted: false })
+      .select('DISTINCT menu.*')
+      .getRawMany();
+    return ResultData.ok(result)
   }
 }

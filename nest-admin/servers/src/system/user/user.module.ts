@@ -9,9 +9,11 @@ import { UserService } from './user.service'
 import { BaseController } from './base.controller'
 import { UserController } from './user.controller'
 import { RoleEntity } from 'src/system/role/role.entity'
+import { MenuEntity } from '../menu/menu.entity'
+import { MenuService } from '../menu/menu.service'
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, RoleEntity]),
+    TypeOrmModule.forFeature([UserEntity, RoleEntity, MenuEntity]),
     forwardRef(() => AuthModule),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -25,7 +27,7 @@ import { RoleEntity } from 'src/system/role/role.entity'
     }),
     PermModule,
   ],
-  providers: [UserService],
+  providers: [UserService, MenuService],
   controllers: [BaseController, UserController],
   exports: [UserService],
 })

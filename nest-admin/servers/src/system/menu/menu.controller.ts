@@ -15,7 +15,7 @@ export class MenuController {
   constructor(private readonly menuService: MenuService) {}
 
   @Get('/all')
-  @ApiOperation({ summary: '得到所有菜单' })
+  @ApiOperation({ summary: '获取菜单列表' })
   @ApiResult(MenuEntity, true)
   async findAllMenu(@Query() dto: FindMenuListDto): Promise<ResultData> {
     return await this.menuService.findAllMenu(dto)
