@@ -21,25 +21,27 @@ export const columns: BasicColumn[] = [
     },
   },
   {
+    title: '排序',
+    dataIndex: 'orderNum',
+    width: 80,
+    align: 'center',
+  },
+  {
     title: '权限标识',
     dataIndex: 'permission',
-    width: 240,
+    width: 340,
   },
   {
     title: '路由地址',
     dataIndex: 'routePath',
-    width: 200,
+    width: 240,
   },
   {
     title: '组件地址',
     dataIndex: 'componentPath',
+    width: 400,
   },
-  {
-    title: '排序',
-    dataIndex: 'orderNum',
-    width: 50,
-    align: 'center',
-  },
+  
   {
     title: '创建时间',
     dataIndex: 'createdAt',
