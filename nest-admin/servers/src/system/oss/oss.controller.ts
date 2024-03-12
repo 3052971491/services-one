@@ -16,24 +16,24 @@ import { CreateOssDto } from './dto/create-oss.dto'
 export class OssController {
   constructor(private readonly ossService: OssService) {}
 
-  @Post('upload')
-  @ApiOperation({ summary: '文件上传,返回 url 地址' })
+  @Get()
+  @ApiOperation({ summary: '查询文件上传列表' })
+  @ApiResult(OssEntity, true, true)
+  async findList(@Query() search: FindOssDto): Promise<ResultData> {
+    return await this.ossService.findList(search)
+  }
+
+  @Post()
+  @ApiOperation({ summary: '文件上传, 返回 url 地址' })
   @ApiConsumes('multipart/form-data')
   @HttpCode(200)
   @UseInterceptors(FileInterceptor('file'))
-  @ApiResult(OssEntity)
+  @ApiResult()
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @Body() params: CreateOssDto,
     @Req() req,
   ): Promise<ResultData> {
     return await this.ossService.create([file], params, req.user)
-  }
-
-  @Get('list')
-  @ApiOperation({ summary: '查询文件上传列表' })
-  @ApiResult(OssEntity, true, true)
-  async findList(@Query() search: FindOssDto): Promise<ResultData> {
-    return await this.ossService.findList(search)
   }
 }

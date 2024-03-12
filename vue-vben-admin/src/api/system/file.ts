@@ -3,12 +3,11 @@ import { UploadFileParams, FileParams, FileListGetResultModel } from './model/fi
 import { defHttp } from '@/utils/http/axios';
 
 enum Api {
-  Oss = '/oss/upload',
-  OssList = '/oss/list',
+  Oss = '/oss',
 }
 
 export const getFileList = (params: FileParams) =>
-  defHttp.get<FileListGetResultModel>({ url: Api.OssList, params });
+  defHttp.get<FileListGetResultModel>({ url: Api.Oss, params });
 export const uploadFile = (params: UploadFileParams) =>
   defHttp.post<FileListGetResultModel>({
     url: Api.Oss,
