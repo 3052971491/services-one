@@ -117,9 +117,9 @@
     reload();
   }
 
-  function handleView(record: Recordable) {
+  // function handleView(record: Recordable) {
     // go('/system/account_detail/' + record.id);
-  }
+  // }
 
   async function handleResetPassword(record: Recordable) {
     setLoading(true)

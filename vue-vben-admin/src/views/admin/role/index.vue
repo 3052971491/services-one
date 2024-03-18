@@ -16,13 +16,6 @@
                 onClick: handleEdit.bind(null, record),
               },
               {
-                auth: 'Page.Admin.Role.PermissionAssignment',
-                icon: 'icon-park-outline:permissions',
-                tooltip: '权限分配',
-                ifShow: record.isSystem !== 0,
-                onClick: handlePermission.bind(null, record),
-              },
-              {
                 auth: 'Page.Admin.Role.DeleteRole',
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
@@ -38,7 +31,7 @@
         </template>
       </template>
     </BasicTable>
-    <RoleModal @register="registerModal" @success="handleSuccess" />
+    <!-- <RoleModal @register="registerModal" @success="handleSuccess" /> -->
     <MenuPermissionModal :width="900" @register="registerPermissionModal" @success="handleSuccess" />
   </div>
 </template>
@@ -47,7 +40,6 @@
   import { deleteRole, getRoleListByPage } from '@/api/demo/system';
 
   import { useModal } from '@/components/Modal';
-  import RoleModal from './RoleModal.vue';
   import MenuPermissionModal from './PermissionModal.vue';
 
   import { columns, searchFormSchema } from './role.data';
@@ -56,7 +48,7 @@
 
   defineOptions({ name: 'RoleManagement' });
 
-  const [registerModal, { openModal }] = useModal();
+  // const [registerModal, { openModal }] = useModal();
   const [registerPermissionModal, permissionModal] = useModal();
   const [registerTable, { reload }] = useTable({
     title: '角色列表',
@@ -90,13 +82,14 @@
   const { createMessage } = useMessage()
 
   function handleCreate() {
-    openModal(true, {
+    permissionModal.openModal(true, {
+      record: {},
       isUpdate: false,
     });
   }
 
   function handleEdit(record: Recordable) {
-    openModal(true, {
+    permissionModal.openModal(true, {
       record,
       isUpdate: true,
     });
@@ -106,12 +99,6 @@
     await deleteRole(record.id)
     createMessage.success('删除成功')
     reload();
-  }
-
-  function handlePermission(record: Recordable) {
-    permissionModal.openModal(true, {
-      record,
-    });
   }
 
   function handleSuccess() {

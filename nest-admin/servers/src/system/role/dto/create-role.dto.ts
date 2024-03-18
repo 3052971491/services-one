@@ -20,9 +20,13 @@ export class CreateRoleDto {
   @IsOptional()
   remark?: string
 
-  // @ApiProperty({ description: '当前角色所拥有的菜单组' })
-  // @IsArray({ message: 'menuIds 类型错误，正确类型 string[]' })
-  // @IsString({ each: true, message: '菜单组内类型错误' })
-  // @IsNotEmpty({ each: true, message: '菜单id 不能为空' })
-  // menuIds: string[]
+  @ApiProperty({ description: '菜单 id 集合', required: false })
+  @IsString( { each: true, message: '菜单id集合中存在类型错误, 正确类型 string[]' })
+  @IsOptional()
+  readonly menus?: string[]
+
+  @ApiProperty({ description: 'api id 集合', required: false })
+  @IsString( { each: true, message: '接口id集合中存在类型错误, 正确类型 string[]' })
+  @IsOptional()
+  readonly apis?: string[]
 }

@@ -31,32 +31,38 @@ export class RoleService {
     private readonly permService: PermService,
   ) {}
 
-  async create(dto: CreateRoleDto, user: UserEntity): Promise<ResultData> {
-    if (await this.roleRepo.findOne({ where: { name: dto.name, isDeleted: false } }))
-      return ResultData.fail(AppHttpCode.USER_CREATE_EXISTING, '角色名称已存在，请调整后重新提交！')
-    if (await this.roleRepo.findOne({ where: { value: dto.value, isDeleted: false } }))
-      return ResultData.fail(AppHttpCode.USER_CREATE_EXISTING, '角色值已存在，请调整后重新提交')
-    const role = plainToInstance(RoleEntity, dto)
-    const res = await this.roleManager.transaction(async (transactionalEntityManager) => {
-      const result = await transactionalEntityManager.save<RoleEntity>(plainToInstance(RoleEntity, role))
-      if (result) {
-        // const roleMenus = plainToInstance(
-        //   RoleMenuEntity,
-        //   dto.menuIds.map((menuId) => {
-        //     return { menuId, roleId: result.id }
-        //   }),
-        // )
-        // await transactionalEntityManager.save<RoleMenuEntity>(roleMenus)
-        // if (user.isSystem === UserType.ORDINARY_USER) {
-        //   // 如果是 一般用户，则需要将 他创建的角色绑定他自身， 超管用户因为可以查看所有角色，则不需要绑定
-        //   const userRole = { userId: user.id, roleId: result.id }
-        //   await transactionalEntityManager.save<UserRoleEntity>(plainToInstance(UserRoleEntity, userRole))
-        // }
+  async create(dto: CreateRoleDto): Promise<ResultData> {
+    try {
+      const existingNameRole = await this.roleRepo.findOne({ where: { name: dto.name, isDeleted: false } })
+      if (existingNameRole) {
+        return ResultData.fail(AppHttpCode.USER_CREATE_EXISTING, '角色名称已存在，请调整后重新提交！')
       }
-      return result
-    })
-    if (!res) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '角色创建失败，请稍后重试')
-    return ResultData.ok(res)
+
+      const existingValueRole = await this.roleRepo.findOne({ where: { value: dto.value, isDeleted: false } })
+      if (existingValueRole) {
+        return ResultData.fail(AppHttpCode.USER_CREATE_EXISTING, '角色值已存在，请调整后重新提交')
+      }
+
+      const { apis = [], menus = [], ...params } = dto
+      const role = plainToInstance(RoleEntity, { ...params, apis: [], menus: [] })
+
+      const result = await this.roleManager.transaction(async (transactionalEntityManager) => {
+        const savedRole = await transactionalEntityManager.save<RoleEntity>(role)
+        const updatedRole = await this.createOrUpdateRoleMenu(
+          { id: savedRole.id, menus, apis },
+          transactionalEntityManager,
+        )
+        return updatedRole
+      })
+
+      if (!result) {
+        return ResultData.fail(AppHttpCode.SERVICE_ERROR, '角色创建失败，请稍后重试')
+      }
+
+      return ResultData.ok(result)
+    } catch (error) {
+      return ResultData.fail(AppHttpCode.SERVICE_ERROR, '发生错误，请稍后重试')
+    }
   }
 
   async update(dto: UpdateRoleDto, user: UserEntity): Promise<ResultData> {
@@ -154,8 +160,14 @@ export class RoleService {
   }
 
   /** 创建 or 更新角色 */
-  async createOrUpdateRoleMenu(dto: UpdateRoleDto, entityManager: EntityManager): Promise<ResultData> {
-    let role = await entityManager.findOne(RoleEntity, { where: { id: dto.id }, relations: ['menus', 'apis'] })
+  async createOrUpdateRoleMenu(
+    dto: UpdateRoleDto,
+    entityManager: EntityManager,
+    value?: RoleEntity,
+  ): Promise<ResultData> {
+    let role = value
+      ? value
+      : await entityManager.findOne(RoleEntity, { where: { id: dto.id }, relations: ['menus', 'apis'] })
     const menus =
       dto.menus.length > 0
         ? await this.menuRepo.findBy({
@@ -172,7 +184,7 @@ export class RoleService {
         : []
     role.menus = menus
     role.apis = apis
-    const res = await this.roleRepo.save(role)
+    const res = await entityManager.save(role)
     if (!res) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '角色更新失败')
     return ResultData.ok()
   }

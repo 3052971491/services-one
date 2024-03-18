@@ -33,7 +33,7 @@ export class RoleController {
   @ApiOperation({ summary: '创建角色' })
   @ApiResult(RoleEntity)
   async create(@Body() dto: CreateRoleDto, @Req() req): Promise<ResultData> {
-    return await this.roleService.create(dto, req.user)
+    return await this.roleService.create(dto)
   }
 
   @Put()
