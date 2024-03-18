@@ -3,6 +3,7 @@ import { BasicColumn, FormSchema } from '@/components/Table';
 import { h } from 'vue';
 import { Tag } from 'ant-design-vue';
 import { Reg } from '@/utils/validate';
+import { UserType } from '@/enums/userEnum';
 
 export const columns: BasicColumn[] = [
   {
@@ -10,7 +11,7 @@ export const columns: BasicColumn[] = [
     dataIndex: 'account',
     fixed: 'left',
     customRender: ({ record }) => {
-      if (record.isSystem === 1) {
+      if (record.isSystem === UserType.ORDINARY_USER) {
         return record.account
       }
       return h('span', {}, [

@@ -1,3 +1,7 @@
+import { StatusValue } from '@/api/admin/model/menu';
+import { BasicEntityParams } from '@/api/model/baseModel';
+import { UserType } from '@/enums/userEnum';
+
 /**
  * @description: Login interface parameters
  */
@@ -22,21 +26,30 @@ export interface LoginResultModel {
 /**
  * @description: Get user information return value
  */
-export interface GetUserInfoModel {
-  roles: RoleInfo[];
-  // 用户id
-  userId: string | number;
-  // 用户名
-  username: string;
-  // 真实名字
-  realName: string;
+export type GetUserInfoModel = BasicEntityParams & {
   // 账号
   account: string;
   // 头像
   avatar: string;
-  // 介绍
-  desc?: string;
-}
+  // 邮箱
+  email: string;
+  /** 是否系统 */
+  isSystem: UserType;
+  // 昵称
+  nickname: string;
+  // 密码
+  password: string;
+  /** 输出屏蔽盐 */
+  salt: string;
+  // 手机号码
+  phoneNum: string;
+  // 备注
+  remark: string;
+  /** 所属状态 */
+  status: StatusValue;
+  roles: RoleInfo[];
+  [key: string]: any;
+};
 
 export interface RegisterParams {
   phoneNum: string;
