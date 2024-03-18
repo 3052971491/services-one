@@ -75,7 +75,7 @@ export class UserController {
     return await this.userService.update(dto, req.user)
   }
 
-  @Put('/password/reset/:userId')
+  @Put('/password/reset')
   @ApiOperation({ summary: '重置用户密码' })
   @ApiResult()
   @UseInterceptors(UpdateInterceptor)
@@ -83,26 +83,26 @@ export class UserController {
     return await this.userService.updatePassword(userId, '', true, req.user)
   }
 
-  @Post('/import')
-  @ApiOperation({ summary: 'excel 批量导入用户' })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
-  @HttpCode(200)
-  @UseInterceptors(FileInterceptor('file'))
-  @ApiResult(UserEntity, true)
-  async importUsers(@UploadedFile() file: Express.Multer.File): Promise<ResultData> {
-    return await this.userService.importUsers(file)
-  }
+  // @Post('/import')
+  // @ApiOperation({ summary: 'excel 批量导入用户' })
+  // @ApiConsumes('multipart/form-data')
+  // @ApiBody({
+  //   schema: {
+  //     type: 'object',
+  //     properties: {
+  //       file: {
+  //         type: 'string',
+  //         format: 'binary',
+  //       },
+  //     },
+  //   },
+  // })
+  // @HttpCode(200)
+  // @UseInterceptors(FileInterceptor('file'))
+  // @ApiResult(UserEntity, true)
+  // async importUsers(@UploadedFile() file: Express.Multer.File): Promise<ResultData> {
+  //   return await this.userService.importUsers(file)
+  // }
 
   @Delete()
   @UseInterceptors(UpdateInterceptor)

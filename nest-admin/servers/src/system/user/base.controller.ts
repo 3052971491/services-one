@@ -48,4 +48,12 @@ export class BaseController {
   async getUserInfo(@Req() req): Promise<ResultData> {
     return ResultData.ok(req.user)
   }
+
+  @Get('logout')
+  @ApiOperation({ summary: '注销' })
+  @ApiResult()
+  @ApiBearerAuth()
+  async logout(@Req() req): Promise<ResultData> {
+    return await this.userService.logout(req.user.id)
+  }
 }

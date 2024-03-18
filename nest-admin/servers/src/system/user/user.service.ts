@@ -463,4 +463,9 @@ export class UserService {
       .getRawMany();
     return ResultData.ok(result)
   }
+
+  async logout(userid: string) {
+    await this.redisService.del(getRedisKey(RedisKeyPrefix.USER_INFO, userid))
+    return ResultData.ok()
+  }
 }
