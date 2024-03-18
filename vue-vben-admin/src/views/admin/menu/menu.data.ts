@@ -65,7 +65,7 @@ export const searchFormSchema: FormSchema[] = [
     field: 'hasBtn',
     label: '菜单',
     component: 'Select',
-    defaultValue: 0,
+    defaultValue: 1,
     helpMessage: '菜单, 是否显示按钮',
     componentProps: {
       options: [
