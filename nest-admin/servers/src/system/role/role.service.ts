@@ -67,7 +67,7 @@ export class RoleService {
     if (dto.value && (await this.roleRepo.findOne({ where: { id: Not(dto.id), value: dto.value, isDeleted: false } })))
       return ResultData.fail(AppHttpCode.USER_CREATE_EXISTING, '角色值已存在，请调整后重新提交')
     const { affected } = await this.roleManager.transaction(async (transactionalEntityManager) => {
-      const { apis, menus, ...params } = dto
+      const { apis = [], menus = [], ...params } = dto
       const role = plainToInstance(RoleEntity, params)
       await this.createOrUpdateRoleMenu({ id: dto.id, menus, apis }, transactionalEntityManager)
       return await transactionalEntityManager.update<RoleEntity>(RoleEntity, dto.id, { ...role })
