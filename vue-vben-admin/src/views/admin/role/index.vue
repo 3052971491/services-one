@@ -2,25 +2,28 @@
   <div class="w-full h-full">
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增角色 </a-button>
+        <a-button v-auth="'Page.Admin.Role.AddRole'" type="primary" @click="handleCreate"> 新增角色 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
           <TableAction
             :actions="[
               {
+                auth: 'Page.Admin.Role.EditRoleInfo',
                 icon: 'clarity:note-edit-line',
                 tooltip: '编辑角色信息',
                 ifShow: record.isSystem !== 0,
                 onClick: handleEdit.bind(null, record),
               },
               {
+                auth: 'Page.Admin.Role.PermissionAssignment',
                 icon: 'icon-park-outline:permissions',
                 tooltip: '权限分配',
                 ifShow: record.isSystem !== 0,
                 onClick: handlePermission.bind(null, record),
               },
               {
+                auth: 'Page.Admin.Role.DeleteRole',
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
                 ifShow: record.isSystem !== 0,

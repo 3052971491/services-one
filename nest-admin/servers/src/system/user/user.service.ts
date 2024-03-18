@@ -89,7 +89,7 @@ export class UserService {
     if (!dto.nickname) {
       const timestamp = getCurrentTimestamp() // 获取当前时区的时间戳
       const defaultNickname = `User_${timestamp}` // 生成默认昵称，格式为"User" + 时间戳
-      dto.nickname = defaultNickname;
+      dto.nickname = defaultNickname
     }
     dto.password = await hash(dto.password, salt)
     // plainToInstance  忽略转换 @Exclude 装饰器
@@ -303,7 +303,7 @@ export class UserService {
     const userInfo = instanceToPlain(dto)
     delete userInfo.roleIds
 
-    const { password, ...user } = userInfo;
+    const { password, ...user } = userInfo
     if (dto?.password) {
       const salt = existing?.salt ? existing.salt : await genSalt()
       user.password = await hash(dto.password, salt)
@@ -433,13 +433,17 @@ export class UserService {
   }
 
   async delete(dto, user: UserEntity): Promise<ResultData> {
-    const { id, ...opt } = dto;
+    const { id, ...opt } = dto
     const existing = await this.userRepo.findOne({ where: { id, isDeleted: false } })
     if (!existing) return ResultData.fail(AppHttpCode.USER_NOT_FOUND, '当前用户不存在或已被删除')
     const { affected } = await this.userManager.transaction(async (transactionalEntityManager) => {
       // 删除 user - role 关系
       // await transactionalEntityManager.delete(UserRoleEntity, { roleId: id })
-      const result = await transactionalEntityManager.update<UserEntity>(UserEntity, id, plainToInstance(UserEntity, { ...opt, isDeleted: true }))
+      const result = await transactionalEntityManager.update<UserEntity>(
+        UserEntity,
+        id,
+        plainToInstance(UserEntity, { ...opt, isDeleted: true }),
+      )
       return result
     })
     if (!affected) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '删除失败，请稍后重试')
@@ -454,18 +458,41 @@ export class UserService {
     if (isSystem === UserType.SUPER_ADMIN) {
       return this.menuervice.findAllMenu({})
     }
-    const result = await this.userRepo.createQueryBuilder('user')
+    const result = await this.userRepo
+      .createQueryBuilder('user')
       .leftJoin('user.roles', 'role')
       .leftJoin('role.menus', 'menu')
       .where('user.id = :id', { id })
-      .andWhere('menu.isDeleted = :isDeleted', { isDeleted: false })
+      .andWhere('menu.isDeleted = :isDeleted and menu.type != 3', { isDeleted: false })
       .select('DISTINCT menu.*')
-      .getRawMany();
+      .getRawMany()
+    return ResultData.ok(result)
+  }
+
+  async getUserInfo(userid: string) {
+    let user = await this.userRepo
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.roles', 'sys_role', 'sys_role.isDeleted = :isDeleted', { isDeleted: false })
+      .leftJoinAndSelect('sys_role.menus', 'sys_menu', 'sys_menu.isDeleted = :isDeleted', { isDeleted: false })
+      .where('user.id = :id', { id: userid })
+      .select(['user', 'sys_role.id', 'sys_role.name', 'sys_role.value', 'sys_menu.permission'])
+      .getOne()
+
+    // 整合并去重所有角色的菜单集合
+    const allMenus = user.roles.reduce((result, item) => {
+      const permissions = item.menus.map((i) => i.permission);
+      result = [...result, ...permissions];
+      return result;
+    }, [])
+    const result = instanceToPlain(user)
+    result.permissions = Array.from(new Set(allMenus));
+
+    result.password = ''
+    result.salt = ''
     return ResultData.ok(result)
   }
 
   async logout(userid: string) {
-    await this.redisService.del(getRedisKey(RedisKeyPrefix.USER_INFO, userid))
     return ResultData.ok()
   }
 }

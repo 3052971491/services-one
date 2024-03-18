@@ -39,3 +39,8 @@ export interface MenuListItem {
   permission?: string;
   componentPath?: string;
 }
+
+export interface FindMenuListDto {
+  name?: string;
+  hasBtn?: number;
+}

@@ -1,5 +1,5 @@
 import { defHttp } from '@/utils/http/axios';
-import { CreateOrUpdateMenuParams, MenuListItem } from './model/menu';
+import { CreateOrUpdateMenuParams, FindMenuListDto, MenuListItem } from './model/menu';
 
 enum Api {
   GetAll = '/menu/all',
@@ -14,7 +14,7 @@ export const createMenu = (params?: CreateOrUpdateMenuParams) =>
 export const updateMenu = (params?: CreateOrUpdateMenuParams) =>
   defHttp.put({ url: Api.Menu, params });
 /** 获取所有菜单 */
-export const getAllList = (params?: CreateOrUpdateMenuParams) =>
+export const getAllList = (params?: FindMenuListDto) =>
   defHttp.get<MenuListItem[]>({ url: Api.GetAll, params });
 /** 删除菜单 */
 export const deleteMenu = (params: { id: string }) =>

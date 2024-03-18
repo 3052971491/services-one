@@ -16,6 +16,7 @@ import { RoleEnum } from '@/enums/roleEnum';
 import { intersection } from 'lodash-es';
 import { isArray } from '@/utils/is';
 import { useMultipleTabStore } from '@/store/modules/multipleTab';
+import { UserType } from '@/enums/userEnum';
 
 // User permissions related operations
 export function usePermission() {
@@ -55,13 +56,17 @@ export function usePermission() {
   }
 
   /**
-   * Determine whether there is permission
+   * 确定是否有权限
    */
   function hasPermission(value?: RoleEnum | RoleEnum[] | string | string[], def = true): boolean {
-    // Visible by default
+    // 默认可见
     if (!value) {
       return def;
     }
+
+    /** 如果是系统账号则拥有所有权限 */
+    if (userStore.getUserInfo.isSystem === UserType.SUPER_ADMIN) return true
+
 
     const permMode = appStore.getProjectConfig.permissionMode;
 

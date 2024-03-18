@@ -2,19 +2,21 @@
   <div class="w-full h-full">
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增 </a-button>
+        <a-button v-auth="'Page.Admin.Perm.AddPerm'" type="primary" @click="handleCreate"> 新增 </a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
           <TableAction
             :actions="[
               {
+                auth: 'Page.Admin.Perm.EditPerm',
                 icon: 'clarity:note-edit-line',
                 tooltip: '编辑',
                 ifShow: record.isSystem !== 0,
                 onClick: handleEdit.bind(null, record),
               },
               {
+                auth: 'Page.Admin.Perm.DeletePerm',
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
                 ifShow: record.isSystem !== 0,

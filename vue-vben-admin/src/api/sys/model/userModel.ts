@@ -48,6 +48,8 @@ export type GetUserInfoModel = BasicEntityParams & {
   /** 所属状态 */
   status: StatusValue;
   roles: RoleInfo[];
+  /** 权限集合 */
+  permissions: string[];
   [key: string]: any;
 };
 

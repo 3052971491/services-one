@@ -46,7 +46,7 @@ export class BaseController {
   @ApiResult(UserEntity)
   @ApiBearerAuth()
   async getUserInfo(@Req() req): Promise<ResultData> {
-    return ResultData.ok(req.user)
+    return await this.userService.getUserInfo(req.user.id)
   }
 
   @Get('logout')

@@ -68,11 +68,11 @@
 
   const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
     activeKey.value = '1';
-    setModalProps({ confirmLoading: true });
+    setModalProps({ loading: true });
     const { menus = [], apis = [] } = data.record;
     rowId.value = data.record.id;
     // 获取所有的菜单列表
-    let menuList = await getAllList();
+    let menuList = await getAllList({ hasBtn: 1 });
     let apiList = await getPermList();
     menuList = listToTree(
       menuList,
@@ -94,7 +94,7 @@
     menuTreeData.value = handleTreeData('menu', menuList, menu.value);
     apiTreeData.value = handleTreeData('api', apiList, api.value);
 
-    setModalProps({ confirmLoading: false });
+    setModalProps({ loading: false });
   });
 
   function handleTreeData(type: string, treeNodes: TransferProps['dataSource'] = [], targetKeys: Key[] = []) {

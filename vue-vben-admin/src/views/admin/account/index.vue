@@ -2,18 +2,20 @@
   <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate">新增账号</a-button>
+        <a-button v-auth="'Page.Admin.Account.AddAccount'" type="primary" @click="handleCreate">新增账号</a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
           <TableAction
             :actions="[
               {
+                auth: 'Page.Admin.Account.ViewUserDetail',
                 icon: 'clarity:info-standard-line',
                 tooltip: '查看用户详情',
                 onClick: handleView.bind(null, record),
               },
               {
+                auth: 'Page.Admin.Account.ResetPassword',
                 icon: 'mdi:lock-reset',
                 tooltip: '重置密码',
                 popConfirm: {
@@ -23,11 +25,13 @@
                 },
               },
               {
+                auth: 'Page.Admin.Account.EditUserProfile',
                 icon: 'clarity:note-edit-line',
                 tooltip: '编辑用户资料',
                 onClick: handleEdit.bind(null, record),
               },
               {
+                auth: 'Page.Admin.Account.DeleteAccount',
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
                 tooltip: '删除此账号',

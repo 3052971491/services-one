@@ -124,9 +124,9 @@ export const useUserStore = defineStore({
     async getUserInfoAction(): Promise<GetUserInfoModel | null> {
       if (!this.getToken) return null;
       const userInfo = await getUserInfo();
-      const { roles = [] } = userInfo;
-      if (isArray(roles)) {
-        const roleList = roles.map((item) => item.value) as RoleEnum[];
+      const { permissions = [] } = userInfo;
+      if (isArray(permissions)) {
+        const roleList = permissions as RoleEnum[];
         this.setRoleList(roleList);
       } else {
         userInfo.roles = [];
