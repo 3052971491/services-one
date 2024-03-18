@@ -8,12 +8,12 @@
         <template v-if="column.key === 'action'">
           <TableAction
             :actions="[
-              {
-                auth: 'Page.Admin.Account.ViewUserDetail',
-                icon: 'clarity:info-standard-line',
-                tooltip: '查看用户详情',
-                onClick: handleView.bind(null, record),
-              },
+              // {
+              //   auth: 'Page.Admin.Account.ViewUserDetail',
+              //   icon: 'clarity:info-standard-line',
+              //   tooltip: '查看用户详情',
+              //   onClick: handleView.bind(null, record),
+              // },
               {
                 auth: 'Page.Admin.Account.ResetPassword',
                 icon: 'mdi:lock-reset',
@@ -35,7 +35,7 @@
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
                 tooltip: '删除此账号',
-                disabled: record.isSystem === 0,
+                ifShow: record.isSystem !== UserType.SUPER_ADMIN,
                 popConfirm: {
                   title: '是否确认删除',
                   placement: 'bottomRight',
@@ -59,6 +59,7 @@
   import AccountModal from './AccountModal.vue';
   import { columns, searchFormSchema } from './account.data';
   import { useMessage } from '@/hooks/web/useMessage';
+  import { UserType } from '@/enums/userEnum';
 
   const { createMessage } = useMessage();
 

@@ -34,6 +34,11 @@ export const columns: BasicColumn[] = [
     },
   },
   {
+    title: '角色值',
+    dataIndex: 'value',
+    width: 240,
+  },
+  {
     title: '备注',
     dataIndex: 'remark',
     width: 240,
