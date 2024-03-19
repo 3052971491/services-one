@@ -50,7 +50,7 @@ export class UserEntity extends CommonEntity{
   @Column({ type: 'tinyint', default: UserType.ORDINARY_USER, comment: '帐号类型: 0-超管， 1-普通用户' })
   public isSystem: UserType
 
-  @ManyToMany(() => RoleEntity)
+  @ManyToMany(() => RoleEntity, role => role.users)
   @JoinTable()
   roles: RoleEntity[];
 }

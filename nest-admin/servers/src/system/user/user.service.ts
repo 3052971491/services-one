@@ -309,7 +309,7 @@ export class UserService {
       user.password = await hash(dto.password, salt)
     }
     const { affected } = await this.userManager.transaction(async (transactionalEntityManager) => {
-      await this.createOrUpdateUserRole({ userId: dto.id, roleIds })
+      await this.createOrUpdateUserRole({ userId: dto.id, roleIds }, transactionalEntityManager)
       return await transactionalEntityManager.update<UserEntity>(UserEntity, dto.id, { ...user })
     })
 
@@ -342,8 +342,9 @@ export class UserService {
   }
 
   /** 创建 or 更新用户-角色 */
-  async createOrUpdateUserRole(dto: CreateOrUpdateUserRolesDto): Promise<ResultData> {
-    const user = await this.userRepo.findOne({ where: { id: dto.userId }, relations: ['roles'] })
+  async createOrUpdateUserRole(dto: CreateOrUpdateUserRolesDto, entityManager: EntityManager,): Promise<ResultData> {
+    let user = await entityManager.findOne(UserEntity, { where: { id: dto.userId }, relations: ['roles'] })
+    // const user = await this.userRepo.findOne({ where: { id: dto.userId }, relations: ['roles'] })
     if (user) {
       const roles = await this.roleRepository.findByIds(dto.roleIds) // 假设存在一个方法用于批量查询角色信息
       user.roles = roles // 假设 UserEntity 中有一个 roles 属性来维护与角色的关系

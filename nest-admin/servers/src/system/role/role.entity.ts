@@ -26,7 +26,7 @@ export class RoleEntity extends CommonEntity {
   @Column({ type: 'varchar', length: 100, default: '', comment: '角色备注' })
   remark: string
 
-  @ManyToMany(() => UserEntity, (user) => user.roles)
+  @ManyToMany(() => UserEntity, (user) => user.id)
   @JoinTable()
   users: UserEntity[];
 
