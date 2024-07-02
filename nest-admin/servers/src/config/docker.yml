@@ -19,7 +19,7 @@ db:
     host: 'mysql'
     username: 'root'
     password: 'root'
-    database: 'kapok'
+    database: 'service-one-dev'
     port: 3306
     charset: 'utf8mb4'
     logger: 'advanced-console'

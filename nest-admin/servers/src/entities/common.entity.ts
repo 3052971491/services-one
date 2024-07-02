@@ -8,7 +8,7 @@ import { BaseEntity, BeforeInsert, BeforeUpdate, Column, PrimaryGeneratedColumn,
 export class CommonEntity extends BaseEntity {
   /** 唯一标识 */
   @ApiProperty({ type: String, description: 'id' })
-  @PrimaryGeneratedColumn({ type: 'bigint' })
+  @PrimaryGeneratedColumn('uuid')
   id: string
 
   /**
@@ -21,7 +21,7 @@ export class CommonEntity extends BaseEntity {
    * 创建人
    * @description 记录创建条目的用户或管理员的信息
    */
-  @Column({ nullable: true, comment: '创建人' })
+  @Column({ nullable: true, comment: '创建人', type: 'uuid' })
   createdBy: string
 
   /**
@@ -35,7 +35,7 @@ export class CommonEntity extends BaseEntity {
    * 更新人
    * @description 记录更新条目的用户或管理员的信息
    */
-  @Column({ nullable: true, comment: '更新人' })
+  @Column({ nullable: true, comment: '更新人', type: 'uuid' })
   updatedBy: string
 
   /**
@@ -49,7 +49,7 @@ export class CommonEntity extends BaseEntity {
    * 删除人
    * @description 记录删除条目的用户或管理员的信息
    */
-  @Column({ nullable: true, comment: '删除人' })
+  @Column({ nullable: true, comment: '删除人', type: 'uuid' })
   deletedBy: string
 
   /** 记录删除时间 */

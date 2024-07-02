@@ -13,7 +13,7 @@ export class PermEntity extends CommonEntity {
   public type: PermType
 
   @ApiProperty({ description: '组id' })
-  @Column({ name: 'parent_id', nullable: true, type: 'bigint' })
+  @Column({ name: 'parent_id', nullable: true, type: 'uuid' })
   public parentId: string
 
   @ApiProperty({ description: '名称' })

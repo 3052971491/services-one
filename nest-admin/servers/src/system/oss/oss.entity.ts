@@ -5,11 +5,11 @@ import { ApiProperty } from '@nestjs/swagger'
 @Entity('sys_oss')
 export class OssEntity {
   @ApiProperty({ description: 'id' })
-  @PrimaryGeneratedColumn({ type: 'bigint' })
+  @PrimaryGeneratedColumn('uuid')
   public id: number
 
   @ApiProperty({ description: '上传用户id' })
-  @Column({ type: 'bigint', name: 'user_id', comment: '上传用户id' })
+  @Column({ name: 'user_id', comment: '上传用户id', type: 'uuid' })
   public createdBy: string
 
   @ApiProperty({ description: '上传用户帐号' })
