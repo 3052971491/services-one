@@ -56,7 +56,7 @@ async function bootstrap() {
   // 生产环境使用 nginx 可以将当前文档地址 屏蔽外部访问
   SwaggerModule.setup(`${prefix}/docs`, app, document, {
     swaggerOptions: {
-      persistAuthorization: false,
+      persistAuthorization: true,
     },
     customSiteTitle: 'Nest-Admin API Docs',
   })
