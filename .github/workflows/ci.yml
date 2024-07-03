@@ -23,7 +23,7 @@ jobs:
           docker tag vue-vben-admin:dev swr.cn-north-4.myhuaweicloud.com/yuanjunjie/vue-vben-admin:dev
           docker push swr.cn-north-4.myhuaweicloud.com/yuanjunjie/vue-vben-admin:dev
 
-  steps:
+    steps:
       - uses: actions/checkout@v2
 
       - name: Build Server docker
