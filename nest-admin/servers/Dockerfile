@@ -1,6 +1,6 @@
 FROM node:22.3.0 as builder
 
-CMD [ "mkdir", "/upload" ]
+RUN mkdir -p /upload && chmod 777 /upload
 
 WORKDIR /servers
 
