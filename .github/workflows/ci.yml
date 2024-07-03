@@ -42,7 +42,7 @@ jobs:
           docker push swr.cn-north-4.myhuaweicloud.com/yuanjunjie/nest-admin:dev
 
   deploy:
-    needs: [build]
+    needs: [client, server]
     name: Deploy
     runs-on: fd-dev
 
