@@ -63,7 +63,7 @@ jobs:
       - name: Run
         run: |
           sudo su
-          sudo docker compose -f docker-compose.yml up -d
+          sudo docker compose -f ./docker-compose.yml up -d
           
       - name: Clear Docker Cache
         run: |
