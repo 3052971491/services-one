@@ -26,7 +26,7 @@ services:
     command: npm run start:docker
     restart: always
     ports:
-      - 9001:5173
+      - 9001:9001
     volumes:
       - upload:/nest-admin/upload
 
