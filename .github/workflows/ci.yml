@@ -52,18 +52,18 @@ jobs:
       - name: Update docker images
         run: |
           sudo su
-          docker pull swr.cn-north-4.myhuaweicloud.com/yuanjunjie/vue-vben-admin:dev
-          docker pull swr.cn-north-4.myhuaweicloud.com/yuanjunjie/nest-admin:dev
+          sudo docker pull swr.cn-north-4.myhuaweicloud.com/yuanjunjie/vue-vben-admin:dev
+          sudo docker pull swr.cn-north-4.myhuaweicloud.com/yuanjunjie/nest-admin:dev
 
       - name: Login to Docker Registry 
         run: |
           sudo su
-          docker login -u ${{ secrets.HUAWEI_CLOUD_USERNAME }} -p ${{ secrets.HUAWEI_CLOUD_PASSWORD }} swr.cn-north-4.myhuaweicloud.com
+          sudo docker login -u ${{ secrets.HUAWEI_CLOUD_USERNAME }} -p ${{ secrets.HUAWEI_CLOUD_PASSWORD }} swr.cn-north-4.myhuaweicloud.com
 
       - name: Run
         run: |
           sudo su
-          docker compose -f docker-compose.yml up -d
+          sudo docker compose -f docker-compose.yml up -d
           
       - name: Clear Docker Cache
         run: |
