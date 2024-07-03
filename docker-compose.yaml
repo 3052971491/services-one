@@ -1,0 +1,34 @@
+version: "3"
+
+networks:
+  web_net:
+    external: true
+
+services:
+  vueui:
+    container_name: vue-vben-admin
+    image: swr.cn-north-4.myhuaweicloud.com/yuanjunjie/vue-vben-admin:dev
+    build:
+      context: ./vue-vben-admin
+      dockerfile: ./vue-vben-admin/Dockerfile
+    restart: always
+    ports:
+      - 5173:80
+    depends_on:
+      - servers
+
+  servers:
+    container_name: nest-admin
+    image: swr.cn-north-4.myhuaweicloud.com/yuanjunjie/nest-admin:dev
+    build:
+      context: ./nest-admin/servers
+      dockerfile: ./nest-admin/servers/Dockerfile
+    command: npm run start:docker
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - upload:/nest-admin/upload
+
+volumes:
+  upload:
