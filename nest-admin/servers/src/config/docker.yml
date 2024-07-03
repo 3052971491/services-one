@@ -1,7 +1,7 @@
 # 开发环境配置
 app:
-  prefix: '/api'
-  port: 8080
+  prefix: '/v1/api'
+  port: 5173
   logger:
     # 项目日志存储路径，相对路径（相对本项目根目录）或绝对路径
     dir: '../logs'
@@ -10,7 +10,7 @@ app:
     # location 文件上传后存储目录，相对路径（相对本项目根目录）或绝对路径
     location: '../upload'
     # 文件服务器地址，这是开发环境的配置 生产环境请自行配置成可访问域名
-    domain: ''
+    domain: 'http://123.249.74.79:5173'
     # 文件虚拟路径, 必须以 / 开头
     serveRoot: '/static'
 # 数据库配置
@@ -18,7 +18,7 @@ db:
   mysql:
     host: 'mysql'
     username: 'root'
-    password: 'root'
+    password: '123456'
     database: 'service-one-dev'
     port: 3306
     charset: 'utf8mb4'
@@ -45,9 +45,9 @@ jwt:
 # 权限 白名单配置
 perm:
   router:
-    whitelist: [{ path: '/api/register', method: 'POST'  }, { path: '/api/login', method: 'POST' }, { path: '/api/perm/{id}', method: 'GET' }, { path: '/api/oss/upload', method: 'POST' }]
+    whitelist: [{ path: '/v1/api/register', method: 'POST'  }, { path: '/v1/api/login', method: 'POST' }, { path: '/v1/api/logout', method: 'GET' }, { path: '/v1/api/perm/{id}', method: 'GET' }, { path: '/v1/api/oss/upload', method: 'POST' }, { path: '/v1/api/getUserInfo', method: 'GET' }]
 
 # 用户相关
 # 初始密码， 重置密码
 user:
-  initialPassword: 'Q123456'
+  initialPassword: 'ABC#123'
