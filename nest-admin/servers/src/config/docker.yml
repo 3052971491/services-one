@@ -16,7 +16,7 @@ app:
 # 数据库配置
 db:
   mysql:
-    host: 'mysql'
+    host: '123.249.74.79'
     username: 'root'
     password: '123456'
     database: 'service-one-dev'
@@ -32,7 +32,7 @@ db:
 
 # redis 配置
 redis:
-  host: 'redis'
+  host: '123.249.74.79'
   port: 6379
   db: 0
   keyPrefix: 'nest:'
