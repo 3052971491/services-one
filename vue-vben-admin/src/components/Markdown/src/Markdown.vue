@@ -99,7 +99,7 @@
       lang: unref(getCurrentLang),
       mode: 'sv',
       fullscreen: {
-        index: 520,
+        index: 1012,
       },
       preview: {
         theme: {
