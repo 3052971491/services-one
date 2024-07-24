@@ -42,7 +42,6 @@
   import CreateOrEditModal from './CreateOrEditModal.vue';
   import { columns, searchFormSchema } from './category.data';
   import { useMessage } from '@/hooks/web/useMessage';
-  import { UserType } from '@/enums/userEnum';
 
   const { createMessage } = useMessage();
   

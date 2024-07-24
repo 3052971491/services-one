@@ -1,4 +1,6 @@
 import { h } from 'vue';
+import { Switch } from 'ant-design-vue';
+import { useMessage } from '@/hooks/web/useMessage';
 import { BasicColumn, FormSchema } from '@/components/Table';
 import { MarkDown } from '@/components/Markdown';
 export const columns: BasicColumn[] = [
@@ -11,6 +13,40 @@ export const columns: BasicColumn[] = [
     title: '分类',
     width: 160,
     dataIndex: 'category',
+  },
+  {
+    title: '置顶',
+    width: 160,
+    dataIndex: 'stickyPost',
+    helpMessage: ['相同分类只拥有一个置顶', '每一个分类可拥有一个置顶'],
+    align: 'center',
+    customRender: ({ record }) => {
+      if (!Reflect.has(record, 'pendingStatus')) {
+        record.pendingStatus = false;
+      }
+      return h(Switch, {
+        checked: record.status === true,
+        checkedChildren: '否',
+        unCheckedChildren: '是',
+        loading: record.pendingStatus,
+        onChange(checked) {
+          // record.pendingStatus = true;
+          const newStatus = checked ? true : false;
+          const { createMessage } = useMessage();
+          // setRoleStatus(record.id, newStatus)
+          //   .then(() => {
+          //     record.status = newStatus;
+          //     createMessage.success(`已成功修改角色状态`);
+          //   })
+          //   .catch(() => {
+          //     createMessage.error('修改角色状态失败');
+          //   })
+          //   .finally(() => {
+          //     record.pendingStatus = false;
+          //   });
+        },
+      });
+    }
   },
   {
     title: '',
@@ -43,10 +79,10 @@ export const searchFormSchema: FormSchema[] = [
     component: 'RangePicker',
     componentProps: {
       placeholder: ['开始时间', '结束时间'],
-      showTime: true
+      showTime: true,
     },
     colProps: { span: 6 },
-    isAdvanced: true
+    isAdvanced: true,
   },
 ];
 
@@ -57,11 +93,11 @@ export const basicFormSchema: FormSchema[] = [
     component: 'Input',
     required: true,
     colProps: {
-      span: 6
+      span: 6,
     },
     componentProps: {
       showCount: true,
-    }
+    },
   },
   {
     field: 'category',
@@ -69,11 +105,11 @@ export const basicFormSchema: FormSchema[] = [
     component: 'Input',
     required: true,
     colProps: {
-      span: 6
+      span: 6,
     },
     componentProps: {
       showCount: true,
-    }
+    },
   },
   {
     field: 'markdown',
@@ -82,7 +118,7 @@ export const basicFormSchema: FormSchema[] = [
     defaultValue: '',
     required: true,
     colProps: {
-      span: 24
+      span: 24,
     },
     render: ({ model, field }) => {
       return h(MarkDown, {
@@ -95,4 +131,3 @@ export const basicFormSchema: FormSchema[] = [
     },
   },
 ];
-
