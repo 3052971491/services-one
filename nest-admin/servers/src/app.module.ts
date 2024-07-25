@@ -19,6 +19,9 @@ import { RoleModule } from './system/role/role.module'
 import { PermModule } from './system/perm/perm.module'
 import { OssModule } from './system/oss/oss.module'
 
+import { MemorandumCategoryModule } from './website/memorandum-management/category/memorandum-category.module'
+import { MemorandumModule } from './website/memorandum-management/memorandum/memorandum.module'
+
 @Module({
   imports: [
     // 配置模块
@@ -95,6 +98,8 @@ import { OssModule } from './system/oss/oss.module'
     PermModule,
     OssModule,
     // 业务功能模块
+    MemorandumCategoryModule,
+    // MemorandumModule
   ],
   // app module 守卫，两个守卫分别依赖 UserService、PermService, 而 UserService、PermService 没有设置全局模块，
   // 所以这俩 守卫 不能再 main.ts 设置全局守卫

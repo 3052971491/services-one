@@ -97,6 +97,7 @@ export const basicFormSchema: FormSchema[] = [
     },
     componentProps: {
       showCount: true,
+      maxlength: 100,
     },
   },
   {
@@ -112,7 +113,7 @@ export const basicFormSchema: FormSchema[] = [
     },
   },
   {
-    field: 'markdown',
+    field: 'content',
     component: 'Input',
     label: '内容',
     defaultValue: '',

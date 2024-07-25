@@ -19,7 +19,7 @@
   import { BasicModal, useModalInner } from '@/components/Modal';
   import { BasicForm, useForm } from '@/components/Form';
   import { basicFormSchema } from './category.data';
-  import { createUser, updateUser } from '@/api/demo/system';
+  import { add, update } from '@/api/website/memorandum-category';
   import { useMessage } from '@/hooks/web/useMessage';
 
   const { createMessage } = useMessage();
@@ -29,7 +29,7 @@
   const isUpdate = ref(true);
   const rowId = ref('');
 
-  const [registerForm, { setFieldsValue, validate, clearValidate, updateSchema }] = useForm({
+  const [registerForm, { setFieldsValue, validate, clearValidate }] = useForm({
     name: 'memorandum-management-category-modal-form',
     labelWidth: '80px',
     baseColProps: { span: 12 },
@@ -63,14 +63,14 @@
     try {
       const values = await validate();
       setModalProps({ confirmLoading: true });
-      let params = {
+      let params: any = {
         ...values, id: unref(isUpdate) ? rowId.value : undefined
       }
       if (unref(isUpdate)) {
-        await updateUser(params)
+        await update(params)
         createMessage.success('更新成功')
       } else {
-        await createUser(params)
+        await add(params)
         createMessage.success('新增成功')
       }
       

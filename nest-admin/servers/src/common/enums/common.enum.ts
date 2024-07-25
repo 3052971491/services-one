@@ -20,6 +20,13 @@ export enum StatusValue {
   NORMAL = 1
 }
 
+export enum StatusValue2 {
+  /** 否 */
+  NO = 0,
+  /** 是 */
+  YES = 1
+}
+
 export enum MenuType {
   /** 菜单 */
   MENU = 1,

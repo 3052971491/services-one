@@ -8,7 +8,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '描述',
-    dataIndex: 'remark',
+    dataIndex: 'description',
   },
   {
     title: '创建时间',
@@ -46,11 +46,12 @@ export const basicFormSchema: FormSchema[] = [
     required: true,
     componentProps: {
       showCount: true,
+      maxlength: 20,
     }
   },
   {
-    label: '备注',
-    field: 'remark',
+    label: '描述',
+    field: 'description',
     component: 'InputTextArea',
     componentProps: {
       showCount: true,
