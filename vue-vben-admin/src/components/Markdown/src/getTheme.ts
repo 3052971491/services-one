@@ -17,3 +17,42 @@ export const getTheme = (
       return isDark ? 'dracula' : 'github';
   }
 };
+
+export const getToolbar = () => {
+  return [
+    'emoji',
+    'headings',
+    'bold',
+    'italic',
+    'strike',
+    'line',
+    'quote',
+    'list',
+    'ordered-list',
+    'check',
+    'outdent',
+    'indent',
+    'code',
+    'inline-code',
+    // 'upload',
+    'link',
+    'table',
+    // 'record',
+    '|',
+    'insert-after',
+    'insert-before',
+    'undo',
+    'redo',
+    'fullscreen',
+    // 'edit-mode',
+    'both',
+    'preview',
+    'outline',
+    // 'code-theme',
+    // 'content-theme',
+    'export',
+    // 'devtools',
+    // 'info',
+    // 'help',
+  ];
+};

@@ -2,7 +2,12 @@
   <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #toolbar>
-        <a-button v-auth="'Page.Website.MemorandumManagement.Memorandum..Add'" type="primary" @click="handleCreate">新增</a-button>
+        <a-button
+          v-auth="'Page.Website.MemorandumManagement.Memorandum..Add'"
+          type="primary"
+          @click="handleCreate"
+          >新增</a-button
+        >
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
@@ -10,21 +15,25 @@
             :actions="[
               {
                 auth: 'Page.Website.MemorandumManagement.Memorandum.Preview',
-                icon: 'clarity:info-standard-line',
-                tooltip: '预览',
+                icon: 'icon-park-outline:preview-open',
                 onClick: handlePreview.bind(null, record),
+              },
+              {
+                ifShow: record.stickyPost !== StatusValue.YES,
+                auth: 'Page.Website.MemorandumManagement.Memorandum.StickyPost',
+                icon: 'icon-park-outline:list-top',
+                tooltip: '置顶',
+                onClick: handleStickyPost.bind(null, record),
               },
               {
                 auth: 'Page.Website.MemorandumManagement.Memorandum.Edit',
                 icon: 'clarity:note-edit-line',
-                tooltip: '编辑',
                 onClick: handleEdit.bind(null, record),
               },
               {
                 auth: 'Page.Website.MemorandumManagement.Memorandum.Delete',
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
-                tooltip: '删除',
                 popConfirm: {
                   title: '是否确认删除',
                   placement: 'bottomRight',
@@ -36,27 +45,40 @@
         </template>
       </template>
     </BasicTable>
-    <CreateOrEditModal @register="registerModal" @success="handleSuccess" :defaultFullscreen="true" :canFullscreen="false" />
+    <CreateOrEditModal
+      @register="registerModal"
+      @success="handleSuccess"
+      :defaultFullscreen="true"
+      :canFullscreen="false"
+    />
+    <PreviewModal
+      @register="registerPreviewModal"
+      :defaultFullscreen="true"
+      :canFullscreen="false"
+      :showOkBtn="false"
+    />
   </PageWrapper>
 </template>
 <script lang="ts" setup>
   import { reactive } from 'vue';
   import { BasicTable, useTable, TableAction } from '@/components/Table';
-  import { deleteUser, getAccountList, updatePassword } from '@/api/demo/system';
+  import { getPage, del, setStickPost } from '@/api/website/memorandum';
   import { PageWrapper } from '@/components/Page';
   import { useModal } from '@/components/Modal';
   import CreateOrEditModal from './CreateOrEditModal.vue';
+  import PreviewModal from './PreviewModal.vue';
   import { columns, searchFormSchema } from './memorandum.data';
   import { useMessage } from '@/hooks/web/useMessage';
-  import { UserType } from '@/enums/userEnum';
+  import { StatusValue } from '@/enums/commonEnum';
 
   const { createMessage } = useMessage();
-  
+
   const [registerModal, { openModal }] = useModal();
+  const [registerPreviewModal, { openModal: openPreviewModal }] = useModal();
   const searchInfo = reactive<Recordable>({});
   const [registerTable, { reload, setLoading }] = useTable({
     title: '列表',
-    api: getAccountList,
+    api: getPage,
     rowKey: 'id',
     columns,
     formConfig: {
@@ -75,7 +97,7 @@
       };
     },
     actionColumn: {
-      width: 120,
+      width: 180,
       title: '操作',
       dataIndex: 'action',
     },
@@ -95,19 +117,34 @@
   }
 
   async function handleDelete(record: Recordable) {
-    await deleteUser(record.id)
-    createMessage.success('删除成功')
+    await del({
+      id: record.id,
+    });
+    createMessage.success('删除成功');
     reload();
   }
 
-  function handleSuccess({ isUpdate, values }) {
+  function handleSuccess() {
     reload();
   }
 
+  function handleStickyPost(record: Recordable) {
+    setLoading(true);
+    setStickPost({
+      id: record.id,
+      stickyPost: StatusValue.YES,
+    })
+      .then(() => {
+        createMessage.success(`操作成功`);
+      })
+      .finally(() => {
+        reload();
+        setLoading(false);
+      });
+  }
   function handlePreview(record: Recordable) {
-    openModal(true, {
+    openPreviewModal(true, {
       record,
-      isUpdate: true,
     });
   }
 </script>

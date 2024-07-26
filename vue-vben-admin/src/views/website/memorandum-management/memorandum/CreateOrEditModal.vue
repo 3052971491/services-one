@@ -11,11 +11,10 @@
 </template>
 <script lang="ts" setup>
   import { ref, computed, unref } from 'vue';
-  import { Collapse, CollapsePanel } from 'ant-design-vue';
   import { BasicModal, useModalInner } from '@/components/Modal';
   import { BasicForm, useForm } from '@/components/Form';
   import { basicFormSchema } from './memorandum.data';
-  import { createUser, updateUser } from '@/api/demo/system';
+  import { add, getDetail, update } from '@/api/website/memorandum';
   import { useMessage } from '@/hooks/web/useMessage';
 
   const { createMessage } = useMessage();
@@ -25,7 +24,7 @@
   const isUpdate = ref(true);
   const rowId = ref('');
 
-  const [registerForm, { setFieldsValue, validate, clearValidate, updateSchema }] = useForm({
+  const [registerForm, { setFieldsValue, validate, clearValidate }] = useForm({
     name: 'memorandum-management-category-modal-form',
     layout: 'vertical',
     baseColProps: { span: 12 },
@@ -41,12 +40,12 @@
     isUpdate.value = !!data?.isUpdate;
     if (unref(isUpdate)) {
       rowId.value = data.record.id;
-      setFieldsValue({
-        ...data.record,
+      const r = await getDetail({
+        id: rowId.value,
       });
-    } else {
       setFieldsValue({
-        status: 1,
+        category: data.record.categories.length > 0 ? data.record.categories[0].id : undefined,
+        ...r,
       })
     }
     clearValidate();
@@ -57,16 +56,18 @@
 
   async function handleSubmit() {
     try {
-      const values = await validate();
+      const { category,...values } = await validate();
       setModalProps({ confirmLoading: true });
-      let params = {
-        ...values, id: unref(isUpdate) ? rowId.value : undefined
+      let params: any = {
+        id: unref(isUpdate) ? rowId.value : undefined,
+        categories: category ? [category] : [],
+        ...values, 
       }
       if (unref(isUpdate)) {
-        await updateUser(params)
+        await update(params)
         createMessage.success('更新成功')
       } else {
-        await createUser(params)
+        await add(params)
         createMessage.success('新增成功')
       }
       
@@ -79,5 +80,4 @@
       setModalProps({ confirmLoading: false });
     }
   }
-  const activeKey = ref(['1', '2']);
 </script>

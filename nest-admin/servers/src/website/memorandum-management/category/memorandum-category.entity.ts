@@ -14,7 +14,6 @@ export class MemorandumCategoryEntity extends CommonEntity{
   @Column({ type: 'varchar', length: 200, default: '', comment: '描述' })
   public description: string
 
-  // @ManyToMany(() => MemorandumEntity, i=> i.categories)
-  // @JoinTable()
-  // memorandums: MemorandumEntity[];
+  @ManyToMany(() => MemorandumEntity, i => i.categories)
+  memorandums: MemorandumEntity[];
 }

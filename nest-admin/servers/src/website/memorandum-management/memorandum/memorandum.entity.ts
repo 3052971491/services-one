@@ -5,7 +5,7 @@ import { $enum } from 'ts-enum-util'
 import { StatusValue2 } from 'src/common/enums/common.enum'
 import { MemorandumCategoryEntity } from '../category/memorandum-category.entity'
 
-@Entity('website_memorandum_category')
+@Entity('website_memorandum')
 export class MemorandumEntity extends CommonEntity {
   @ApiProperty({ type: String, description: '标题' })
   @Column({ type: 'varchar', default: '', length: 100, comment: '标题' })
@@ -19,7 +19,7 @@ export class MemorandumEntity extends CommonEntity {
   @Column({ type: 'text', comment: '内容' })
   public content: string
 
-  // @ManyToMany(() => MemorandumCategoryEntity, i=> i.memorandums)
-  // @JoinTable()
-  // categories: MemorandumCategoryEntity[];
+  @ManyToMany(() => MemorandumCategoryEntity, category => category.memorandums, { cascade: true })
+  @JoinTable()
+  categories: MemorandumCategoryEntity[];
 }

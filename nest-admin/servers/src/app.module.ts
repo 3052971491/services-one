@@ -99,7 +99,7 @@ import { MemorandumModule } from './website/memorandum-management/memorandum/mem
     OssModule,
     // 业务功能模块
     MemorandumCategoryModule,
-    // MemorandumModule
+    MemorandumModule
   ],
   // app module 守卫，两个守卫分别依赖 UserService、PermService, 而 UserService、PermService 没有设置全局模块，
   // 所以这俩 守卫 不能再 main.ts 设置全局守卫

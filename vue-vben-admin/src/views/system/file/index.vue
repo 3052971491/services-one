@@ -29,7 +29,7 @@
 
   import { columns, searchFormSchema } from './file.data';
   import { useMessage } from '@/hooks/web/useMessage';
-import { copyText } from '@/utils/copyTextToClipboard';
+  import { copyText } from '@/utils/copyTextToClipboard';
 
   defineOptions({ name: 'RoleManagement' });
 

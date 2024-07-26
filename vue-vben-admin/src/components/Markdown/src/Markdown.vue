@@ -20,7 +20,7 @@
   import { useModalContext } from '../../Modal';
   import { useRootSetting } from '@/hooks/setting/useRootSetting';
   import { onMountedOrActivated } from '@vben/hooks';
-  import { getTheme } from './getTheme';
+  import { getTheme, getToolbar } from './getTheme';
 
   type Lang = 'zh_CN' | 'en_US' | 'ja_JP' | 'ko_KR' | undefined;
 
@@ -101,6 +101,7 @@
       fullscreen: {
         index: 1012,
       },
+      toolbar: getToolbar(),
       preview: {
         theme: {
           // 设置内容主题

@@ -52,7 +52,7 @@
 
   const [registerModal, { openModal }] = useModal();
   const searchInfo = reactive<Recordable>({});
-  const [registerTable, { reload, setLoading }] = useTable({
+  const [registerTable, { reload }] = useTable({
     title: '列表',
     api: getPage,
     rowKey: 'id',

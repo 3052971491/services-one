@@ -1,8 +1,9 @@
 import { h } from 'vue';
-import { Switch } from 'ant-design-vue';
-import { useMessage } from '@/hooks/web/useMessage';
+import { Switch, Tag } from 'ant-design-vue';
 import { BasicColumn, FormSchema } from '@/components/Table';
 import { MarkDown } from '@/components/Markdown';
+import { getList } from '@/api/website/memorandum-category';
+import { StatusValue } from '@/enums/commonEnum';
 export const columns: BasicColumn[] = [
   {
     title: '标题',
@@ -10,43 +11,34 @@ export const columns: BasicColumn[] = [
     width: 300,
   },
   {
-    title: '分类',
-    width: 160,
-    dataIndex: 'category',
-  },
-  {
     title: '置顶',
-    width: 160,
+    width: 80,
     dataIndex: 'stickyPost',
     helpMessage: ['相同分类只拥有一个置顶', '每一个分类可拥有一个置顶'],
     align: 'center',
     customRender: ({ record }) => {
-      if (!Reflect.has(record, 'pendingStatus')) {
-        record.pendingStatus = false;
-      }
-      return h(Switch, {
-        checked: record.status === true,
-        checkedChildren: '否',
-        unCheckedChildren: '是',
-        loading: record.pendingStatus,
-        onChange(checked) {
-          // record.pendingStatus = true;
-          const newStatus = checked ? true : false;
-          const { createMessage } = useMessage();
-          // setRoleStatus(record.id, newStatus)
-          //   .then(() => {
-          //     record.status = newStatus;
-          //     createMessage.success(`已成功修改角色状态`);
-          //   })
-          //   .catch(() => {
-          //     createMessage.error('修改角色状态失败');
-          //   })
-          //   .finally(() => {
-          //     record.pendingStatus = false;
-          //   });
-        },
-      });
-    }
+      const s = record.stickyPost === StatusValue.YES;
+      return h('span', {}, [
+        h(
+          Tag,
+          {
+            bordered: false,
+            color: s ? 'success' : 'error',
+          },
+          {
+            default: () => h('span', s ? '是': '否'),
+          },
+        ),
+      ]);
+    },
+  },
+  {
+    title: '类型',
+    width: 160,
+    dataIndex: 'categories',
+    customRender: ({ record }) => {
+      return record.categories.length > 0 ? record.categories[0].name : '';
+    },
   },
   {
     title: '',
@@ -68,10 +60,14 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
   {
-    field: 'category',
-    label: '分类',
-    component: 'Input',
+    field: 'categories',
+    label: '类型',
+    component: 'ApiSelect',
     colProps: { span: 6 },
+    componentProps: {
+      mode: 'multiple',
+      api: () => getList({}),
+    },
   },
   {
     field: 'createDate',
@@ -102,14 +98,14 @@ export const basicFormSchema: FormSchema[] = [
   },
   {
     field: 'category',
-    label: '分类',
-    component: 'Input',
+    label: '类型',
+    component: 'ApiSelect',
     required: true,
     colProps: {
       span: 6,
     },
     componentProps: {
-      showCount: true,
+      api: () => getList({}),
     },
   },
   {

@@ -12,6 +12,7 @@ import {
 import { ResultData } from 'src/common/utils/result'
 import { AppHttpCode } from 'src/common/enums/code.enum'
 import { plainToInstance } from 'class-transformer'
+import { MemorandumService } from '../memorandum/memorandum.service'
 
 @Injectable()
 export class MemorandumCategoryService {
@@ -20,6 +21,7 @@ export class MemorandumCategoryService {
     private readonly repository: Repository<MemorandumCategoryEntity>,
     @InjectEntityManager()
     private readonly manager: EntityManager,
+    private readonly memorandumService: MemorandumService,
   ) {}
 
   /**
@@ -57,10 +59,10 @@ export class MemorandumCategoryService {
       const existing = await this.getDetail(dto.id)
       if (!existing) return ResultData.fail(AppHttpCode.ROLE_NOT_FOUND, '当前分类不存在或已被删除')
 
-      // todo 该分类存在备忘录数据, 则不允许被删除
-      // let len = 0;
-      // if (len > 0)
-      //   return ResultData.fail(AppHttpCode.ROLE_NOT_DEL, '当前分类还有绑定的备忘录，需要解除关联后删除')
+      // 该分类存在备忘录数据, 则不允许被删除
+      let o = await this.memorandumService.getPage({ size: 1, page: 1, categories: [dto.id] })
+      if (o.data.total > 0)
+        return ResultData.fail(AppHttpCode.ROLE_NOT_DEL, '当前分类还有绑定的备忘录，需要解除关联后删除')
 
       const { affected } = await this.manager.transaction(async (transactionalEntityManager) => {
         const __data__ = plainToInstance(MemorandumCategoryEntity, {
@@ -142,10 +144,16 @@ export class MemorandumCategoryService {
       where.createdAt = Between(dto.startDate, dto.endDate)
     }
     const list = await this.repository.find({
+      select: ['id', 'name'],
       order: { createdAt: 'DESC' },
       where,
     })
-    return ResultData.ok({ list, total: list.length })
+     // 转换结果为 label 和 value 格式
+     const transformedResults = list.map(item => ({
+      label: item.name,
+      value: item.id.toString(),
+    }));
+    return ResultData.ok(transformedResults)
   }
 
   /**
