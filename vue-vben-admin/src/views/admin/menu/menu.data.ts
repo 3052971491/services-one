@@ -16,7 +16,7 @@ export const columns: BasicColumn[] = [
     width: 50,
     align: 'center',
     customRender: ({ record }) => {
-      if (!record?.icon) return
+      if (!record?.icon) return;
       return h(Icon, { icon: record.icon });
     },
   },
@@ -29,19 +29,22 @@ export const columns: BasicColumn[] = [
   {
     title: '权限标识',
     dataIndex: 'permission',
-    width: 340,
+    width: 520,
+    resizable: true,
   },
   {
     title: '路由地址',
     dataIndex: 'routePath',
-    width: 240,
+    width: 520,
+    resizable: true,
   },
   {
     title: '组件地址',
     dataIndex: 'componentPath',
-    width: 400,
+    width: 520,
+    resizable: true,
   },
-  
+
   {
     title: '创建时间',
     dataIndex: 'createdAt',
@@ -65,7 +68,7 @@ export const searchFormSchema: FormSchema[] = [
     field: 'hasBtn',
     label: '菜单',
     component: 'Select',
-    defaultValue: 1,
+    defaultValue: 0,
     helpMessage: '菜单, 是否显示按钮',
     componentProps: {
       options: [
@@ -86,7 +89,7 @@ export const formSchema: FormSchema[] = [
     componentProps: {
       options: [
         { label: '目录', value: MenuType.MENU },
-        { label: '菜单', value: MenuType.TAB},
+        { label: '菜单', value: MenuType.TAB },
         { label: '按钮', value: MenuType.BUTTON },
       ],
     },
@@ -150,5 +153,5 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     helpMessage: `控制器中定义的权限标识，如：@RequiresPermissions('权限标识')`,
     ifShow: ({ values }) => !isDir(values.type),
-  }
+  },
 ];

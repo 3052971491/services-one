@@ -16,3 +16,14 @@ export const uploadFile = (params: UploadFileParams) =>
       'Content-type': ContentTypeEnum.FORM_DATA,
     },
   });
+
+  export const upload = (file: File) =>
+    defHttp.post<string>({
+      url: Api.Oss +'/upload',
+      params: {
+        file
+      },
+      headers: {
+        'Content-type': ContentTypeEnum.FORM_DATA,
+      },
+    });

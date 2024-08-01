@@ -21,6 +21,7 @@
   import { useRootSetting } from '@/hooks/setting/useRootSetting';
   import { onMountedOrActivated } from '@vben/hooks';
   import { getTheme, getToolbar } from './getTheme';
+  import { upload } from '@/api/system/file.js';
 
   type Lang = 'zh_CN' | 'en_US' | 'ja_JP' | 'ko_KR' | undefined;
 
@@ -126,6 +127,25 @@
           initedRef.value = true;
           emit('get', instance);
         });
+      },
+      upload: {
+        url: '/oss/upload',
+        multiple: false,
+        handler: (files): any => {
+          return new Promise((r) => {
+            if (files.length === 0) {
+              r(null);
+            }
+            upload(files[0])
+              .then((previewUrl) => {
+                unref(vditorRef)?.insertValue(`![图片描述](${previewUrl})`);
+                r(previewUrl);
+              })
+              .catch(() => {
+                r(null);
+              });
+          });
+        },
       },
       blur: () => {
         //unref(vditorRef)?.setValue(props.value);

@@ -34,7 +34,7 @@ export const getToolbar = () => {
     'indent',
     'code',
     'inline-code',
-    // 'upload',
+    'upload',
     'link',
     'table',
     // 'record',

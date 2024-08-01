@@ -3,7 +3,7 @@
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #toolbar>
         <a-button
-          v-auth="'Page.Website.MemorandumManagement.Memorandum..Add'"
+          v-auth="'Page.Website.MemorandumManagement.Memorandum.Add'"
           type="primary"
           @click="handleCreate"
           >新增</a-button

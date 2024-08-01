@@ -52,7 +52,7 @@ export class OssService {
     params: CreateOssDto,
     user: { id: string; account: string },
   ): Promise<ResultData> {
-    const { remark, name } = params;
+    const { remark, name } = params
     const ossList = files.map((file) => {
       // 重新命名文件， uuid, 根据 mimeType 决定 文件扩展名， 直接拿后缀名不可靠
       const newFileName = `${uuid.v4().replace(/-/g, '')}.${mime.extension(file.mimetype)}`
@@ -88,13 +88,52 @@ export class OssService {
     return ResultData.ok(instanceToPlain(result))
   }
 
+  async upload(file: Express.Multer.File, user: { id: string; account: string }) {
+    // 重新命名文件， uuid, 根据 mimeType 决定 文件扩展名， 直接拿后缀名不可靠
+    const newFileName = `${uuid.v4().replace(/-/g, '')}.${mime.extension(file.mimetype)}`
+    // 文件存储路径
+    const fileLocation = path.normalize(path.join(this.basePath, newFileName))
+    // fs 创建文件写入流
+    const writeFile = fs.createWriteStream(fileLocation)
+    // 写入文件
+    writeFile.write(file.buffer)
+    // 千万别忘记了 关闭流
+    writeFile.close()
+    const url = `${this.config.get<string>('app.file.domain')}${
+      this.config.get<string>('app.file.serveRoot') || ''
+    }/${newFileName}`
+    const ossFile = {
+      url,
+      name: newFileName,
+      size: file.size,
+      type: file.mimetype,
+      location: fileLocation,
+      remark: '',
+      createdBy: user.id,
+      userAccount: user.account,
+    }
+    const o = plainToInstance(OssEntity, ossFile)
+    const result = await this.ossManager.transaction(async (transactionalEntityManager) => {
+      return await transactionalEntityManager.save<OssEntity>(o)
+    })
+    if (!result) {
+      return ResultData.fail(AppHttpCode.SERVICE_ERROR, '文件存储失败，请稍后重新上传')
+    }
+    return ResultData.ok(url)
+  }
+
   async findList(search: FindOssDto): Promise<ResultData> {
     const { size, page, startDay, endDay, name } = search
     let where: any = startDay && endDay ? { createDate: Between(`${startDay} 00:00:00`, `${endDay} 23:59:59`) } : {}
     if (name) {
       where.name = Like(`%${name}%`)
     }
-    const res = await this.ossRepo.findAndCount({ order: { createDate: 'DESC' }, skip: size * (page - 1), take: size, where })
+    const res = await this.ossRepo.findAndCount({
+      order: { createDate: 'DESC' },
+      skip: size * (page - 1),
+      take: size,
+      where,
+    })
     return ResultData.ok({ list: instanceToPlain(res[0]), total: res[1] })
   }
 }

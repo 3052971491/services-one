@@ -8,7 +8,7 @@ import { OssService } from './oss.service'
 import { FindOssDto } from './dto/find-oss.dto'
 import { ApiResult } from '../../common/decorators/api-result.decorator'
 import { OssEntity } from './oss.entity'
-import { CreateOssDto } from './dto/create-oss.dto'
+import { CreateOssDto, UploadOssDto } from './dto/create-oss.dto'
 
 @ApiTags('文件存储')
 @ApiBearerAuth()
@@ -35,5 +35,15 @@ export class OssController {
     @Req() req,
   ): Promise<ResultData> {
     return await this.ossService.create([file], params, req.user)
+  }
+
+  @Post('upload')
+  @ApiOperation({ summary: '文件上传, 返回 url 地址' })
+  @ApiConsumes('multipart/form-data')
+  @HttpCode(200)
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiResult()
+  async upload(@UploadedFile() file: Express.Multer.File, @Req() req,): Promise<ResultData> {
+    return await this.ossService.upload(file, req.user)
   }
 }

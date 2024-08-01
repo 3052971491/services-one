@@ -16,3 +16,8 @@ export class CreateOssDto {
   @IsOptional()
   remark?: string
 }
+
+export class UploadOssDto {
+  @ApiProperty({ type: 'string', description: '文件: 上传文件描述, 可以是纯字符串, 也可以是JSON字符串', format: 'binary' })
+  file: Express.Multer.File
+}
